@@ -77,8 +77,8 @@ public class Eliza {
 		return httpRequest(apiUrlPrefix + "eliza", username, token, requestXML);
 	}
 
-	private String gameStateRequest(int gameID) throws IOException {
-		return httpRequest(apiUrlPrefix + "gameState.jsp?game=" + gameID,
+	private String gameStateRequest(int gameId) throws IOException {
+		return httpRequest(apiUrlPrefix + "gameState.jsp?game=" + gameId,
 				username, token, "");
 	}
 
@@ -110,6 +110,9 @@ public class Eliza {
 				int id = Integer.parseInt(gameEle.getChildText("id"));
 				Element gameEleWithMoreInfo = getGameXmlElement(id);
 				HqGame g = new HqGame();
+				g.parseHqXmlElement(gameEle);
+				// a little redundant because some fields are overwritten with
+				// the same info, but it's necessary to get the whole picture
 				g.parseXmlElement(gameEleWithMoreInfo);
 				ret.add(g);
 			}
@@ -131,16 +134,39 @@ public class Eliza {
 	private Element getGameXmlElement(int id) throws IOException, JDOMException {
 		String xml = httpRequest(apiUrlPrefix + "game/" + id, username, token,
 				null);
+		System.out.println(xml);
 		SAXBuilder builder = new SAXBuilder();
 		Document doc = builder.build(new StringReader(xml));
 		return doc.getRootElement();
 	}
 
+	/**
+	 * Creates a new Game object with the game state information from the eliza
+	 * API of the game with the given id
+	 * 
+	 * @param id
+	 *            the game id
+	 * @return a new Game with complete game state information from the eliza
+	 *         API
+	 * @throws IOException
+	 * @throws JDOMException
+	 */
 	public Game getGameState(int id) throws IOException, JDOMException {
 		Document doc = getGameStateXML(id);
 		Game g = new Game();
-		g.parseXmlElement(doc.getRootElement());
+		g.parseXmlElement(doc.getRootElement(), true);
 		return g;
+	}
+
+	/**
+	 * Adds faction/unit data from the eliza API to an existing Game object
+	 * @param game the Game object
+	 * @throws IOException
+	 * @throws JDOMException
+	 */
+	public void getGameState(Game game) throws IOException, JDOMException {
+		Document doc = getGameStateXML(game.getId());
+		game.parseXmlElement(doc.getRootElement(), false);
 	}
 
 	private Document getGameStateXML(int id) throws IOException, JDOMException {

@@ -66,6 +66,26 @@ public class Terrain {
 		return "(terrain: " + coordinate + ":" + type + ")";
 	}
 
+	/**
+	 * Returns the movement cost of the unit moving onto this terrain
+	 * 
+	 * @param unit
+	 *            the moving unit
+	 * @return the movement cost of the unit moving onto this terrain
+	 */
+	public int getMovementCost(Unit unit) {
+		return Specs.terrainMovement.get(getType()).get(unit.getUnitType());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || !(o instanceof Terrain))
+			return false;
+		Terrain t = (Terrain) o;
+		return (getCoordinate().equals(t.getCoordinate()) && getType().equals(
+				t.getType()));
+	}
+
 	// ////////////////// Getters and Setters //////////////////////
 
 	/**

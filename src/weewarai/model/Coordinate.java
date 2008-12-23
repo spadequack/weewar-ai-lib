@@ -123,7 +123,7 @@ public class Coordinate implements Serializable {
 		}
 	}
 
-	public int getDistance(Coordinate c) {
+	public int getDistanceInStraightLine(Coordinate c) {
 		int yh = y % 2;
 		int x1 = new Double(x - Math.ceil((Math.abs(c.y - y) - yh) / 2.0))
 				.intValue();
@@ -238,7 +238,7 @@ public class Coordinate implements Serializable {
 		for (int ix = getX() - radius; ix < getX() + radius + 1; ix++) {
 			for (int iy = getY() - radius; iy < getY() + radius + 1; iy++) {
 				Coordinate to = new Coordinate(ix, iy);
-				if (getDistance(to) <= radius) {
+				if (getDistanceInStraightLine(to) <= radius) {
 					l.add(to);
 				}
 			}

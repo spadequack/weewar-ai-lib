@@ -1,4 +1,4 @@
-package battlecalc;
+package weewarai.battlecalc;
 
 import java.util.*;
 

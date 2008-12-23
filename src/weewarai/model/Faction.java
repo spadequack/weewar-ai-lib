@@ -20,6 +20,7 @@ public class Faction {
 	public Faction() {
 		units = new LinkedList<Unit>();
 		capturedTerrains = new LinkedList<Terrain>();
+		stats = new FactionStats();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -43,6 +44,7 @@ public class Faction {
 			Terrain t = new Terrain();
 			t.parseXmlElement(terrainEle);
 			if (t.isCapturable()) {
+				System.out.println("HELLO");
 				getCapturedTerrains().add(t);
 				getStats().addCapturable(t);
 			} else {
@@ -175,5 +177,4 @@ public class Faction {
 		}
 		return null;
 	}
-
 }

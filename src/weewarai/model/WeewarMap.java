@@ -35,6 +35,35 @@ public class WeewarMap {
 		}
 	}
 
+	/**
+	 * Returns the movement cost for the given unit from the start coordinate to
+	 * the end coordinate
+	 * 
+	 * @param start
+	 *            the start Coordinate
+	 * @param end
+	 *            the end Coordinate
+	 * @param unit
+	 *            the moving unit
+	 * @return the movement cost for the given unit from the start coordinate to
+	 *         the end coordinate
+	 */
+	public int getDistanceForUnitType(Coordinate start, Coordinate end,
+			Unit unit) {
+		int distance = Integer.MAX_VALUE;
+
+		if (start.getDistanceInStraightLine(end) == 1) {
+			Terrain terrain = get(end);
+			// terrain must be on the map
+			if (terrain != null) {
+				distance = terrain.getMovementCost(unit);
+			}
+		} else {
+			throw new RuntimeException("dont support step of more than 1");
+		}
+		return distance;
+	}
+
 	// ////////////////// Getters and Setters //////////////////////
 
 	/**
@@ -81,10 +110,12 @@ public class WeewarMap {
 	public void setHeight(int height) {
 		this.height = height;
 	}
-	
+
 	/**
 	 * Returns the Terrain at the given Coordinate
-	 * @param c the Coordinate
+	 * 
+	 * @param c
+	 *            the Coordinate
 	 * @return the Terrain at the given Coordinate
 	 */
 	public Terrain get(Coordinate c) {

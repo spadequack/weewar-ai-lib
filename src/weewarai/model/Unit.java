@@ -102,6 +102,44 @@ public class Unit {
 				+ faction.getPlayerName() + ")";
 	}
 
+	/**
+	 * Returns whether this unit is of the given unit type (soft, hard, etc.)
+	 * @param type the type to be tested
+	 * @return whether this unit is of the given unit type
+	 */
+	public boolean isOfUnitType(String type) {
+		return getUnitType().equals(type);
+	}
+
+	/**
+	 * Returns whether this unit can exert zone of control on the given unit. It
+	 * can when 1) this unit can attack the given unit and 2) this unit's
+	 * minimum range against the given unit is greater than 1
+	 * 
+	 * @param unit the unit to be tested against
+	 * @return whether this unit can exert ZoC on the given unit
+	 */
+	public boolean canExertZocOn(Unit unit) {
+		return Specs.unitAttack.get(getType()).get(unit.getUnitType()) > 0
+				&& Specs.unitMinRange.get(getType()).get(unit.getUnitType()) > 1;
+	}
+
+	/**
+	 * Returns the unit type (soft, hard, etc.) of this unit
+	 * @return the unit type (soft, hard, etc.) of this unit
+	 */
+	public String getUnitType() {
+		return Specs.unitTypes.get(getType());
+	}
+	
+	public boolean canEnterEnemyHarbor() {
+		return Specs.unitCanEnterEnemyHarbor.get(getType());
+	}
+	
+	public int getMovementPointsFirstMove() {
+		return Specs.unitMobilityFirst.get(getType());
+	}
+
 	// ////////////////// Getters and Setters //////////////////////
 
 	/**

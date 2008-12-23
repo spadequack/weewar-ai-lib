@@ -35,12 +35,12 @@ public class Specs {
 		buildCost.put(Unit.DFA, 1200);
 		buildCost.put(Unit.Anti_Aircraft, 300);
 		buildCost.put(Unit.Hovercraft, 300);
-		
+
 		buildCost.put(Unit.Speedboat, 200);
 		buildCost.put(Unit.Destroyer, 900);
 		buildCost.put(Unit.Battleship, 2000);
 		buildCost.put(Unit.Submarine, 1000);
-		
+
 		buildCost.put(Unit.Helicopter, 600);
 		buildCost.put(Unit.Jetfighter, 800);
 		buildCost.put(Unit.Bomber, 900);
@@ -291,6 +291,9 @@ public class Specs {
 		woods.put(Unit.Boat_Type, 0);
 		terrainDefense.put(Terrain.Woods, woods);
 	}
+	
+	/** Movement cost that represents the unit cannot move there */
+	public static final int UNPASSABLE = 999999;
 
 	/** Terrain movement specs (Name: (Type: Movement Cost)) */
 	public static Map<String, Map<String, Integer>> terrainMovement = new HashMap<String, Map<String, Integer>>();
@@ -300,10 +303,10 @@ public class Specs {
 		airfield.put(Unit.Soft_Type, 3);
 		airfield.put(Unit.Hard_Type, 2);
 		airfield.put(Unit.Air_Type, 3);
-		airfield.put(Unit.Speedboat_Type, 99);
+		airfield.put(Unit.Speedboat_Type, UNPASSABLE);
 		airfield.put(Unit.Amphibic_Type, 3);
-		airfield.put(Unit.Sub_Type, 99);
-		airfield.put(Unit.Boat_Type, 99);
+		airfield.put(Unit.Sub_Type, UNPASSABLE);
+		airfield.put(Unit.Boat_Type, UNPASSABLE);
 		terrainMovement.put(Terrain.Airfield, airfield);
 	}
 
@@ -312,10 +315,10 @@ public class Specs {
 		base.put(Unit.Soft_Type, 3);
 		base.put(Unit.Hard_Type, 2);
 		base.put(Unit.Air_Type, 3);
-		base.put(Unit.Speedboat_Type, 99);
+		base.put(Unit.Speedboat_Type, UNPASSABLE);
 		base.put(Unit.Amphibic_Type, 3);
-		base.put(Unit.Sub_Type, 99);
-		base.put(Unit.Boat_Type, 99);
+		base.put(Unit.Sub_Type, UNPASSABLE);
+		base.put(Unit.Boat_Type, UNPASSABLE);
 		terrainMovement.put(Terrain.Base, base);
 	}
 
@@ -324,10 +327,10 @@ public class Specs {
 		desert.put(Unit.Soft_Type, 5);
 		desert.put(Unit.Hard_Type, 4);
 		desert.put(Unit.Air_Type, 3);
-		desert.put(Unit.Speedboat_Type, 99);
+		desert.put(Unit.Speedboat_Type, UNPASSABLE);
 		desert.put(Unit.Amphibic_Type, 3);
-		desert.put(Unit.Sub_Type, 99);
-		desert.put(Unit.Boat_Type, 99);
+		desert.put(Unit.Sub_Type, UNPASSABLE);
+		desert.put(Unit.Boat_Type, UNPASSABLE);
 		terrainMovement.put(Terrain.Desert, desert);
 	}
 
@@ -346,12 +349,12 @@ public class Specs {
 	static {
 		Map<String, Integer> mountains = new HashMap<String, Integer>();
 		mountains.put(Unit.Soft_Type, 6);
-		mountains.put(Unit.Hard_Type, 99);
+		mountains.put(Unit.Hard_Type, UNPASSABLE);
 		mountains.put(Unit.Air_Type, 3);
-		mountains.put(Unit.Speedboat_Type, 99);
-		mountains.put(Unit.Amphibic_Type, 99);
-		mountains.put(Unit.Sub_Type, 99);
-		mountains.put(Unit.Boat_Type, 99);
+		mountains.put(Unit.Speedboat_Type, UNPASSABLE);
+		mountains.put(Unit.Amphibic_Type, UNPASSABLE);
+		mountains.put(Unit.Sub_Type, UNPASSABLE);
+		mountains.put(Unit.Boat_Type, UNPASSABLE);
 		terrainMovement.put(Terrain.Mountains, mountains);
 	}
 
@@ -360,10 +363,10 @@ public class Specs {
 		plains.put(Unit.Soft_Type, 3);
 		plains.put(Unit.Hard_Type, 3);
 		plains.put(Unit.Air_Type, 3);
-		plains.put(Unit.Speedboat_Type, 99);
+		plains.put(Unit.Speedboat_Type, UNPASSABLE);
 		plains.put(Unit.Amphibic_Type, 3);
-		plains.put(Unit.Sub_Type, 99);
-		plains.put(Unit.Boat_Type, 99);
+		plains.put(Unit.Sub_Type, UNPASSABLE);
+		plains.put(Unit.Boat_Type, UNPASSABLE);
 		terrainMovement.put(Terrain.Plains, plains);
 	}
 
@@ -372,10 +375,10 @@ public class Specs {
 		repairPatch.put(Unit.Soft_Type, 3);
 		repairPatch.put(Unit.Hard_Type, 3);
 		repairPatch.put(Unit.Air_Type, 3);
-		repairPatch.put(Unit.Speedboat_Type, 99);
+		repairPatch.put(Unit.Speedboat_Type, UNPASSABLE);
 		repairPatch.put(Unit.Amphibic_Type, 3);
-		repairPatch.put(Unit.Sub_Type, 99);
-		repairPatch.put(Unit.Boat_Type, 99);
+		repairPatch.put(Unit.Sub_Type, UNPASSABLE);
+		repairPatch.put(Unit.Boat_Type, UNPASSABLE);
 		terrainMovement.put(Terrain.Repair_Patch, repairPatch);
 	}
 
@@ -384,17 +387,17 @@ public class Specs {
 		swamp.put(Unit.Soft_Type, 6);
 		swamp.put(Unit.Hard_Type, 6);
 		swamp.put(Unit.Air_Type, 3);
-		swamp.put(Unit.Speedboat_Type, 99);
+		swamp.put(Unit.Speedboat_Type, UNPASSABLE);
 		swamp.put(Unit.Amphibic_Type, 3);
-		swamp.put(Unit.Sub_Type, 99);
-		swamp.put(Unit.Boat_Type, 99);
+		swamp.put(Unit.Sub_Type, UNPASSABLE);
+		swamp.put(Unit.Boat_Type, UNPASSABLE);
 		terrainMovement.put(Terrain.Swamp, swamp);
 	}
 
 	static {
 		Map<String, Integer> water = new HashMap<String, Integer>();
-		water.put(Unit.Soft_Type, 99);
-		water.put(Unit.Hard_Type, 99);
+		water.put(Unit.Soft_Type, UNPASSABLE);
+		water.put(Unit.Hard_Type, UNPASSABLE);
 		water.put(Unit.Air_Type, 3);
 		water.put(Unit.Speedboat_Type, 3);
 		water.put(Unit.Amphibic_Type, 3);
@@ -408,10 +411,10 @@ public class Specs {
 		woods.put(Unit.Soft_Type, 4);
 		woods.put(Unit.Hard_Type, 6);
 		woods.put(Unit.Air_Type, 3);
-		woods.put(Unit.Speedboat_Type, 99);
-		woods.put(Unit.Amphibic_Type, 99);
-		woods.put(Unit.Sub_Type, 99);
-		woods.put(Unit.Boat_Type, 99);
+		woods.put(Unit.Speedboat_Type, UNPASSABLE);
+		woods.put(Unit.Amphibic_Type, UNPASSABLE);
+		woods.put(Unit.Sub_Type, UNPASSABLE);
+		woods.put(Unit.Boat_Type, UNPASSABLE);
 		terrainMovement.put(Terrain.Woods, woods);
 	}
 
@@ -782,7 +785,7 @@ public class Specs {
 	}
 
 	public static int MAX_UNIT_RANGE = 5;
-	
+
 	/** Unit types (Name: (Type: MaxRange)) */
 	public static Map<String, Map<String, Integer>> unitMaxRange = new HashMap<String, Map<String, Integer>>();
 
@@ -820,6 +823,16 @@ public class Specs {
 		unitMaxRange.put(Unit.Submarine, defaultIsTwo);
 		unitMaxRange.put(Unit.Tank, defaultIsOne);
 		unitMaxRange.put(Unit.Trooper, defaultIsOne);
+	}
+
+	/** Unit types (Name: canEnterEnemyHarbor) */
+	public static Map<String, Boolean> unitCanEnterEnemyHarbor = new DefaultValueMap<String, Boolean>(
+			new HashMap<String, Boolean>(), true);
+
+	static {
+		unitCanEnterEnemyHarbor.put(Unit.Battleship, false);
+		unitCanEnterEnemyHarbor.put(Unit.Destroyer, false);
+		unitCanEnterEnemyHarbor.put(Unit.Submarine, false);
 	}
 
 }

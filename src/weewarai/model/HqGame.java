@@ -10,8 +10,8 @@ public class HqGame {
 
 	private int id;
 	private String name;
-	
-	private boolean isRequiringAnInviteAccept = false;
+
+	private boolean isRequiringAnInviteAccept;
 	private boolean isInNeedOfAttention;
 
 	private String state;
@@ -21,8 +21,8 @@ public class HqGame {
 	private boolean hasPendingInvites;
 	private int pace;
 	private boolean isBasic;
-	private boolean isRated = true;
-	private boolean hasOnlyStandardUnits = false;
+	private boolean isRated;
+	private boolean hasOnlyStandardUnits = false; // TODO set
 
 	private String currentPlayer;
 	private List<String> players;
@@ -32,19 +32,31 @@ public class HqGame {
 	private int creditsPerBase;
 	private int initialCredits;
 	private Date startTime;
-	
+
 	public HqGame() {
 		players = new LinkedList<String>();
 		disabledUnitTypes = new LinkedList<String>();
 	}
 
-	@SuppressWarnings("unchecked")
-	public void parseXmlElement(Element ele) {
+	public void parseHqXmlElement(Element ele) {
 		String att = ele.getAttributeValue("inNeedOfAttention");
 		setInNeedOfAttention(att != null && att.equals("true"));
 
+		// id is a child of game here
 		setId(Integer.parseInt(ele.getChildText("id")));
 
+		setUrl(ele.getChildText("url"));
+
+		// only the hq xml has the url that contains "join"
+		setRequiringAnInviteAccept(getUrl().contains("join"));
+
+		parseCommonXmlElements(ele);
+		// from the hq xml...
+		// there's also a <since> child
+		// there's also a <result> field if game is finished
+	}
+
+	private void parseCommonXmlElements(Element ele) {
 		setName(ele.getChildText("name"));
 
 		// running, lobby, or finished
@@ -52,12 +64,20 @@ public class HqGame {
 
 		setUrl(ele.getChildText("url"));
 
-		setRequiringAnInviteAccept(getUrl().contains("join"));
+	}
 
-		// from the hq xml...
-		// there's also a <since> child
-		// there's also a <result> field if game is finished
-		
+	@SuppressWarnings("unchecked")
+	public void parseXmlElement(Element ele) {
+
+		// id is an attribute of game for the game xml
+		// but is a child of game for the gamestate xml UGH
+		String idString = ele.getAttributeValue("id");
+		if (idString == null)
+			idString = ele.getChildText("id");
+		setId(Integer.parseInt(idString));
+
+		parseCommonXmlElements(ele);
+
 		if (ele.getChildText("round") != null) { // round number
 			setRound(Integer.parseInt(ele.getChildText("round")));
 		}
@@ -69,7 +89,7 @@ public class HqGame {
 		if (ele.getChildText("pace") != null) { // 86400 = 1 day
 			setPace(Integer.parseInt(ele.getChildText("pace")));
 		}
-		
+
 		if (ele.getChildText("map") != null) { // map ID
 			setMapId(Integer.parseInt(ele.getChildText("map")));
 		}
@@ -182,7 +202,7 @@ public class HqGame {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	
+
 	/**
 	 * @return the round
 	 */
@@ -317,7 +337,7 @@ public class HqGame {
 	public void setPlayers(List<String> players) {
 		this.players = players;
 	}
-	
+
 	/**
 	 * @return the disabledUnitTypes
 	 */

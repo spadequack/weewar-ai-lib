@@ -15,10 +15,15 @@ public class Game extends HqGame {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void parseXmlElement(Element ele) {
-		super.parseXmlElement(ele);
-
+		parseXmlElement(ele, true);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void parseXmlElement(Element ele, boolean loadNonFactionData) {
+		if (loadNonFactionData)
+			super.parseXmlElement(ele);
+		
 		if (ele.getChild("factions") != null) {
 			List<Element> factionEles = ele.getChild("factions").getChildren(
 					"faction");
@@ -34,6 +39,7 @@ public class Game extends HqGame {
 			setFactions(factions);
 		}
 	}
+
 
 	// ////////////////// Getters and Setters //////////////////////
 
@@ -98,8 +104,32 @@ public class Game extends HqGame {
 	 */
 	public Faction getTerrainOwner(Terrain t) {
 		for (Faction faction : getFactions()) {
+			System.out.println("ARGH");
+			System.out.println(faction.getPlayerName());
+			System.out.println(faction.getCapturedTerrains());
+			System.out.println("testing: " + t);
 			if (faction.getCapturedTerrains().contains(t)) {
 				return faction;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the Faction that owns the given Coordinate - only makes sense for
+	 * Coordinates that have capturable Terrain types
+	 * 
+	 * @param c
+	 *            the Coordinate
+	 * @return the Faction that owns the given Coordinate, or null if no Faction
+	 *         owns the given Coordinate
+	 */
+	public Faction getTerrainOwner(Coordinate c) {
+		for (Faction faction : getFactions()) {
+			for (Terrain t : faction.getCapturedTerrains()) {
+				if (t.getCoordinate().equals(c)) {
+					return faction;
+				}
 			}
 		}
 		return null;
