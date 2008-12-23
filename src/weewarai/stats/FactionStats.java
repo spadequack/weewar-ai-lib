@@ -28,19 +28,19 @@ public class FactionStats {
 	private float armyHealth = 0;
 
 	private int totalUnits = 0;
-	private Map<String, Integer> unitCount;
-	private Map<String, Integer> capturableCount;
+	private Map<String, Integer> unitCountMap;
+	private Map<String, Integer> capturableCountMap;
 
 	private int income = 0;
 
 	public FactionStats() {
-		unitCount = new HashMap<String, Integer>();
+		unitCountMap = new HashMap<String, Integer>();
 		for (String s : Unit.allUnits) {
-			unitCount.put(s, 0);
+			unitCountMap.put(s, 0);
 		}
-		capturableCount = new HashMap<String, Integer>();
+		capturableCountMap = new HashMap<String, Integer>();
 		for (String s : Terrain.capturableTerrains) {
-			capturableCount.put(s, 0);
+			capturableCountMap.put(s, 0);
 		}
 	}
 
@@ -58,12 +58,16 @@ public class FactionStats {
 				* Specs.buildCost.get(unit.getType());
 		armyPotential += Specs.buildCost.get(unit.getType());
 		armyHealth = armyStrength / armyPotential * 100;
-		unitCount.put(unit.getType(), unitCount.get(unit.getType()) + 1);
+		unitCountMap.put(unit.getType(), unitCountMap.get(unit.getType()) + 1);
 		totalUnits++;
+	}
+	
+	public Map<String, Integer> getUnitCountMap() {
+		return unitCountMap;
 	}
 
 	public int getUnitCount(String unitType) {
-		return unitCount.get(unitType);
+		return unitCountMap.get(unitType);
 	}
 
 	public double getArmyStrength() {
@@ -83,16 +87,20 @@ public class FactionStats {
 	}
 
 	public void addCapturable(Terrain capturable) {
-		capturableCount.put(capturable.getType(), capturableCount
+		capturableCountMap.put(capturable.getType(), capturableCountMap
 				.get(capturable.getType()) + 1);
+	}
+	
+	public Map<String, Integer> getCapturableCountMap() {
+		return capturableCountMap;
 	}
 
 	public int getCapturableCount(String baseType) {
-		return capturableCount.get(baseType);
+		return capturableCountMap.get(baseType);
 	}
 
 	public void setIncomeFromCreditsPerBase(int creditsPerBase) {
-		income = creditsPerBase * capturableCount.get("Base");
+		income = creditsPerBase * capturableCountMap.get("Base");
 	}
 
 	public void setIncome(int income) {
@@ -113,8 +121,8 @@ public class FactionStats {
 
 		Map<String, Integer> statsDifference = new HashMap<String, Integer>();
 
-		for (String key : this.unitCount.keySet()) {
-			statsDifference.put(key, this.unitCount.get(key)
+		for (String key : this.unitCountMap.keySet()) {
+			statsDifference.put(key, this.unitCountMap.get(key)
 					- enemyStats.get(key));
 		}
 

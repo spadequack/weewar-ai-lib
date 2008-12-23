@@ -13,13 +13,13 @@ public class Faction {
 	private String playerName;
 	private int credits;
 	private List<Unit> units;
-	private List<Terrain> terrains;
+	private List<Terrain> capturedTerrains;
 	private int order; // 1-6 (1=blue, 2=red, etc.)
 	private FactionStats stats;
 
 	public Faction() {
 		units = new LinkedList<Unit>();
-		terrains = new LinkedList<Terrain>();
+		capturedTerrains = new LinkedList<Terrain>();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -37,13 +37,18 @@ public class Faction {
 			getUnits().add(u);
 			getStats().addUnit(u);
 		}
-		terrains.clear();
+		capturedTerrains.clear();
 		for (Element terrainEle : (List<Element>) ele.getChildren("terrain")) {
+			// get the list of captured terrains of this faction
 			Terrain t = new Terrain();
 			t.parseXmlElement(terrainEle);
-			getTerrains().add(t);
-			if (t.isCapturable())
+			if (t.isCapturable()) {
+				getCapturedTerrains().add(t);
 				getStats().addCapturable(t);
+			} else {
+				System.out.println("That's weird... " + t.getType()
+						+ " is owned by " + getPlayerName());
+			}
 		}
 	}
 
@@ -110,18 +115,18 @@ public class Faction {
 	}
 
 	/**
-	 * @return the terrains
+	 * @return the capturedTerrains
 	 */
-	public List<Terrain> getTerrains() {
-		return terrains;
+	public List<Terrain> getCapturedTerrains() {
+		return capturedTerrains;
 	}
 
 	/**
-	 * @param terrains
-	 *            the terrains to set
+	 * @param capturedTerrains
+	 *            the capturedTerrains to set
 	 */
-	public void setTerrains(List<Terrain> terrains) {
-		this.terrains = terrains;
+	public void setCapturedTerrains(List<Terrain> capturedTerrains) {
+		this.capturedTerrains = capturedTerrains;
 	}
 
 	/**

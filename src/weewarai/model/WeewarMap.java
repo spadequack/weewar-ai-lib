@@ -81,6 +81,15 @@ public class WeewarMap {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+	
+	/**
+	 * Returns the Terrain at the given Coordinate
+	 * @param c the Coordinate
+	 * @return the Terrain at the given Coordinate
+	 */
+	public Terrain get(Coordinate c) {
+		return terrains.get(c);
+	}
 
 	/**
 	 * Returns all the terrains in the map of a given type

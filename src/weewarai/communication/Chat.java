@@ -80,8 +80,8 @@ public class Chat {
 		return messages;
 	}
 
-	public static void sendMessage(int gameId, String username,
-			String userPassword, String message) throws IOException {
+	public static void sendMessage(int gameId, String message, String username,
+			String userPassword) throws IOException {
 		GetMethod getLogin = null;
 		PostMethod postLogin = null;
 		GetMethod getSendMessage = null;

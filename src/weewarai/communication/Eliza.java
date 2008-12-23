@@ -87,6 +87,15 @@ public class Eliza {
 				username, token, "");
 	}
 
+	/**
+	 * Returns a collection of games in the user's headquarters that are not
+	 * finished
+	 * 
+	 * @return a collection of games in the user's headquarters that are not
+	 *         finished
+	 * @throws IOException
+	 * @throws JDOMException
+	 */
 	@SuppressWarnings("unchecked")
 	public Collection<HqGame> headquarterGames() throws IOException,
 			JDOMException {
@@ -98,19 +107,33 @@ public class Eliza {
 		Collection<Element> games = doc.getRootElement().getChildren("game");
 		for (Element gameEle : games) {
 			if (!gameEle.getChildText("state").equals("finished")) {
+				int id = Integer.parseInt(gameEle.getChildText("id"));
+				Element gameEleWithMoreInfo = getGameXmlElement(id);
 				HqGame g = new HqGame();
-				g.parseXmlElement(gameEle);
+				g.parseXmlElement(gameEleWithMoreInfo);
 				ret.add(g);
 			}
 		}
 		return ret;
 	}
 
-	private Document getGameStateXML(int id) throws IOException, JDOMException {
-		String xml = gameStateRequest(id);
+	/**
+	 * Gets the game xml using the normal api, which lacks bulky information
+	 * such as the location and quantity (health) of every unit on the map. Use
+	 * getGameState() for the complete information
+	 * 
+	 * @param id
+	 *            the game id
+	 * @return the game xml using the normal api
+	 * @throws IOException
+	 * @throws JDOMException
+	 */
+	private Element getGameXmlElement(int id) throws IOException, JDOMException {
+		String xml = httpRequest(apiUrlPrefix + "game/" + id, username, token,
+				null);
 		SAXBuilder builder = new SAXBuilder();
 		Document doc = builder.build(new StringReader(xml));
-		return doc;
+		return doc.getRootElement();
 	}
 
 	public Game getGameState(int id) throws IOException, JDOMException {
@@ -118,6 +141,13 @@ public class Eliza {
 		Game g = new Game();
 		g.parseXmlElement(doc.getRootElement());
 		return g;
+	}
+
+	private Document getGameStateXML(int id) throws IOException, JDOMException {
+		String xml = gameStateRequest(id);
+		SAXBuilder builder = new SAXBuilder();
+		Document doc = builder.build(new StringReader(xml));
+		return doc;
 	}
 
 	/**
