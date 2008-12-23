@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.jdom.Element;
 
+import weewarai.stats.FactionStats;
+
 public class Faction {
 
 	private String state;
@@ -13,6 +15,7 @@ public class Faction {
 	private List<Unit> units;
 	private List<Terrain> terrains;
 	private int order; // 1-6 (1=blue, 2=red, etc.)
+	private FactionStats stats;
 
 	public Faction() {
 		units = new LinkedList<Unit>();
@@ -26,27 +29,21 @@ public class Faction {
 		if (ele.getAttributeValue("credits") != null) {
 			setCredits(Integer.parseInt(ele.getAttributeValue("credits")));
 		}
-		for (Element unit : (List<Element>) ele.getChildren("unit")) {
+		units.clear();
+		for (Element unitEle : (List<Element>) ele.getChildren("unit")) {
 			Unit u = new Unit();
-			u.setCoordinate(new Coordinate(Integer.parseInt(unit
-					.getAttributeValue("x")), Integer.parseInt(unit
-					.getAttributeValue("y"))));
-			u.setType(unit.getAttributeValue("type"));
-			u.setFinished("true".equals(unit.getAttributeValue("finished")));
-			u.setQuantity(Integer.parseInt(unit.getAttributeValue("quantity")));
+			u.parseXmlElement(unitEle);
 			u.setFaction(this);
 			getUnits().add(u);
-			// getUnitStats().addUnit(u); // add in some stats
+			getStats().addUnit(u);
 		}
-		for (Element unit : (List<Element>) ele.getChildren("terrain")) {
+		terrains.clear();
+		for (Element terrainEle : (List<Element>) ele.getChildren("terrain")) {
 			Terrain t = new Terrain();
-			t.setCoordinate(new Coordinate(Integer.parseInt(unit
-					.getAttributeValue("x")), Integer.parseInt(unit
-					.getAttributeValue("y"))));
-			t.setType(unit.getAttributeValue("type"));
-			t.setFinished("true".equals(unit.getAttributeValue("finished")));
+			t.parseXmlElement(terrainEle);
 			getTerrains().add(t);
-			// getUnitStats().addBase(t); // add in some more stats
+			if (t.isCapturable())
+				getStats().addCapturable(t);
 		}
 	}
 
@@ -157,6 +154,20 @@ public class Faction {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @param stats the stats to set
+	 */
+	public void setStats(FactionStats stats) {
+		this.stats = stats;
+	}
+
+	/**
+	 * @return the stats
+	 */
+	public FactionStats getStats() {
+		return stats;
 	}
 
 }

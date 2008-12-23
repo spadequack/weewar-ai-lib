@@ -121,7 +121,7 @@ public class Eliza {
 	}
 
 	/**
-	 * Update the data of only a specific Faction
+	 * Updates the data of only a specific Faction
 	 * 
 	 * @param id
 	 *            the game id

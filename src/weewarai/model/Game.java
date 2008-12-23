@@ -60,7 +60,7 @@ public class Game extends HqGame {
 				factions.add(f);
 				f.setOrder(i++);
 				f.parseXmlElement(factionEle);
-				// getUnitStats().setIncome(creditsPerBase); // more stats
+				f.getStats().setIncomeFromCreditsPerBase(creditsPerBase); // more stats
 			}
 			setFactions(factions);
 		}
