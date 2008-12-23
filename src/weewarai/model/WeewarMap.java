@@ -2,6 +2,7 @@ package weewarai.model;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.jdom.Element;
@@ -9,31 +10,31 @@ import org.jdom.Element;
 public class WeewarMap {
 
 	private Map<Coordinate, Terrain> terrains;
-    private int width;
-    private int height;
-    
-    public WeewarMap() {
-    	terrains = new HashMap<Coordinate, Terrain>();
-    }
-    
-    @SuppressWarnings("unchecked")
+	private int width;
+	private int height;
+
+	public WeewarMap() {
+		terrains = new HashMap<Coordinate, Terrain>();
+	}
+
+	@SuppressWarnings("unchecked")
 	public void parseXmlElement(Element ele) {
-        setWidth(Integer.parseInt(ele.getChildText("width")));
-        setHeight(Integer.parseInt(ele.getChildText("height")));
-        if (ele.getChild("terrains") != null) {
-            Collection<Element> terrains = ele.getChild("terrains").
-                    getChildren("terrain");
-            for (Element terrain : terrains) {
-                Terrain t = new Terrain();
-                t.setCoordinate(new Coordinate(
-                        Integer.parseInt(terrain.getAttributeValue("x")), 
-                        Integer.parseInt(terrain.getAttributeValue("y"))));
-                t.setType(terrain.getAttributeValue("type"));
-                getTerrains().put(t.getCoordinate(), t);
-            }
-        }
-    }
-    
+		setWidth(Integer.parseInt(ele.getChildText("width")));
+		setHeight(Integer.parseInt(ele.getChildText("height")));
+		if (ele.getChild("terrains") != null) {
+			Collection<Element> terrains = ele.getChild("terrains")
+					.getChildren("terrain");
+			for (Element terrain : terrains) {
+				Terrain t = new Terrain();
+				t.setCoordinate(new Coordinate(Integer.parseInt(terrain
+						.getAttributeValue("x")), Integer.parseInt(terrain
+						.getAttributeValue("y"))));
+				t.setType(terrain.getAttributeValue("type"));
+				getTerrains().put(t.getCoordinate(), t);
+			}
+		}
+	}
+
 	// ////////////////// Getters and Setters //////////////////////
 
 	/**
@@ -44,7 +45,8 @@ public class WeewarMap {
 	}
 
 	/**
-	 * @param terrains the terrains to set
+	 * @param terrains
+	 *            the terrains to set
 	 */
 	public void setTerrains(Map<Coordinate, Terrain> terrains) {
 		this.terrains = terrains;
@@ -58,7 +60,8 @@ public class WeewarMap {
 	}
 
 	/**
-	 * @param width the width to set
+	 * @param width
+	 *            the width to set
 	 */
 	public void setWidth(int width) {
 		this.width = width;
@@ -72,9 +75,27 @@ public class WeewarMap {
 	}
 
 	/**
-	 * @param height the height to set
+	 * @param height
+	 *            the height to set
 	 */
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	/**
+	 * Returns all the terrains in the map of a given type
+	 * 
+	 * @param type
+	 *            the terrain type
+	 * @return all the terrains in the map of a given type
+	 */
+	public Collection<Terrain> getTerrainsByType(String type) {
+		Collection<Terrain> myTerrains = new LinkedList<Terrain>();
+		for (Terrain t : getTerrains().values()) {
+			if (t.getType().equals(type)) {
+				myTerrains.add(t);
+			}
+		}
+		return myTerrains;
 	}
 }

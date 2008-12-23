@@ -140,6 +140,21 @@ public class Faction {
 	}
 
 	/**
+	 * @return the stats
+	 */
+	public FactionStats getStats() {
+		return stats;
+	}
+
+	/**
+	 * @param stats
+	 *            the stats to set
+	 */
+	public void setStats(FactionStats stats) {
+		this.stats = stats;
+	}
+
+	/**
 	 * Returns the Unit of this Faction at the given Coordinate
 	 * 
 	 * @param c
@@ -154,20 +169,6 @@ public class Faction {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * @param stats the stats to set
-	 */
-	public void setStats(FactionStats stats) {
-		this.stats = stats;
-	}
-
-	/**
-	 * @return the stats
-	 */
-	public FactionStats getStats() {
-		return stats;
 	}
 
 }

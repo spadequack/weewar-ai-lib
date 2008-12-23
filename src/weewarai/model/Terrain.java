@@ -55,6 +55,17 @@ public class Terrain {
 		setFinished(ele.getAttributeValue("finished").equals("true"));
 	}
 
+	/**
+	 * Returns a string representation of a Terrain in the form of: (terrain:
+	 * [5,4]: Swamp)
+	 * 
+	 * @return a string representation of a Terrain
+	 */
+	@Override
+	public String toString() {
+		return "(terrain: " + coordinate + ":" + type + ")";
+	}
+
 	// ////////////////// Getters and Setters //////////////////////
 
 	/**
