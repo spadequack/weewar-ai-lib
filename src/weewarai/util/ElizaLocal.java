@@ -48,7 +48,7 @@ public class ElizaLocal {
 		for (Coordinate c : rangeRing) {
 			Unit u = game.getUnit(c);
 			if (u != null && !u.getFaction().equals(myFaction)) {
-				int dist = location.getDistanceInStraightLine(c);
+				int dist = location.getDirectDistance(c);
 				// need to confirm because Anti-Air has different range based
 				// on enemy type
 				if (unit.getMinRange(u) <= dist && dist <= unit.getMaxRange(u))

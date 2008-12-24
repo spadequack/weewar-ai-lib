@@ -35,13 +35,8 @@ public class FactionStats {
 
 	public FactionStats() {
 		unitCountMap = new HashMap<String, Integer>();
-		for (String s : Unit.allUnits) {
-			unitCountMap.put(s, 0);
-		}
 		capturableCountMap = new HashMap<String, Integer>();
-		for (String s : Terrain.capturableTerrains) {
-			capturableCountMap.put(s, 0);
-		}
+		reset();
 	}
 
 	public FactionStats(Faction faction, List<Coordinate> coords) {
@@ -50,6 +45,15 @@ public class FactionStats {
 			if (unit != null) {
 				addUnit(unit);
 			}
+		}
+	}
+	
+	public void reset() {
+		for (String s : Unit.allUnits) {
+			unitCountMap.put(s, 0);
+		}
+		for (String s : Terrain.capturableTerrains) {
+			capturableCountMap.put(s, 0);
 		}
 	}
 
@@ -117,13 +121,13 @@ public class FactionStats {
 	 * and then sorts the counts in ascending order
 	 */
 	public LinkedHashMap<String, Integer> compareUnitCounts(
-			Map<String, Integer> enemyStats) {
-
+			FactionStats enemyStats) {
+		Map<String, Integer> enemyStatsMap = enemyStats.getUnitCountMap();
 		Map<String, Integer> statsDifference = new HashMap<String, Integer>();
 
-		for (String key : this.unitCountMap.keySet()) {
-			statsDifference.put(key, this.unitCountMap.get(key)
-					- enemyStats.get(key));
+		for (String key : unitCountMap.keySet()) {
+			statsDifference.put(key, unitCountMap.get(key)
+					- enemyStatsMap.get(key));
 		}
 
 		// sorts the new difference map so you can see where you are most

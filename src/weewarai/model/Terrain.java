@@ -56,14 +56,14 @@ public class Terrain {
 	}
 
 	/**
-	 * Returns a string representation of a Terrain in the form of: (terrain:
-	 * [5,4]: Swamp)
+	 * Returns a string representation of a Terrain in the form of:
+	 * (Swamp:[5,4])
 	 * 
 	 * @return a string representation of a Terrain
 	 */
 	@Override
 	public String toString() {
-		return "(terrain: " + coordinate + ":" + type + ")";
+		return "(" + type + ":" + coordinate + ")";
 	}
 
 	/**
@@ -75,6 +75,30 @@ public class Terrain {
 	 */
 	public int getMovementCost(Unit unit) {
 		return Specs.terrainMovement.get(getType()).get(unit.getUnitType());
+	}
+
+	/**
+	 * Returns the attack modifier of the given unit attacking from this terrain
+	 * 
+	 * @param unit
+	 *            the unit
+	 * @return the attack modifier of the given unit attacking from this terrain
+	 */
+	public int getAttackMod(Unit unit) {
+		return Specs.terrainAttack.get(getType()).get(unit.getUnitType());
+	}
+
+	/**
+	 * Returns the defense modifier of the given unit attacking from this
+	 * terrain
+	 * 
+	 * @param unit
+	 *            the unit
+	 * @return the defense modifier of the given unit attacking from this
+	 *         terrain
+	 */
+	public int getDefenseMod(Unit unit) {
+		return Specs.terrainDefense.get(getType()).get(unit.getUnitType());
 	}
 
 	@Override

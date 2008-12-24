@@ -12,10 +12,10 @@ import weewarai.model.WeewarMap;
 public class BattleCalcUtil {
 
 	/**
-	 * Gets most probable damage done by unit unit moving to from and attacking
-	 * the enemy unit on enemyCoord. Note: now [2 damage with 60%, 3 damage with
-	 * 40%] (weighted avg = 2.4) is preferred over [2 damage with 70%, 3 damage
-	 * with 30%] (weighted avg = 2.1)
+	 * Gets most probable damage done by unit unit moving to fromCoord and
+	 * attacking the enemy unit on enemyCoord. Accounts for range. Note: now [2
+	 * damage with 60%, 3 damage with 40%] (weighted avg = 2.4) is preferred
+	 * over [2 damage with 70%, 3 damage with 30%] (weighted avg = 2.1)
 	 * 
 	 * @param game
 	 *            the game state
@@ -23,32 +23,37 @@ public class BattleCalcUtil {
 	 *            the map info
 	 * @param unit
 	 *            the attacking unit
-	 * @param from
+	 * @param fromCoord
 	 *            the attacking unit's location for the attack
 	 * @param enemyCoord
 	 *            the defending unit's location
 	 * @param bonus
-	 * @return the most probable damage done by unit moving to from and
+	 * @return the most probable damage done by unit moving to fromCoord and
 	 *         attacking the enemy unit on enemyCoord.
 	 * @throws IOException
 	 * @throws JDOMException
 	 */
 	public static double getMostProbableDamageDealt(Game game, WeewarMap wmap,
-			Unit unit, Coordinate from, Coordinate enemyCoord, int bonus)
+			Unit unit, Coordinate fromCoord, Coordinate enemyCoord, int bonus)
 			throws IOException, JDOMException {
 		Unit enemy = game.getUnit(enemyCoord);
+
+		int dist = fromCoord.getDirectDistance(enemyCoord);
+		if (dist < unit.getMinRange(enemy) || unit.getMaxRange(enemy) < dist)
+			return 0;
+
 		double[] probs = BattleCalc.getProbabilities(unit.getQuantity(), unit
-				.getType(), wmap.get(from).getType(), enemy.getQuantity(),
+				.getType(), wmap.get(fromCoord).getType(), enemy.getQuantity(),
 				enemy.getType(), wmap.get(enemyCoord).getType(), bonus);
 		System.out.println("        .. dealt to " + enemy.getType() + " at "
 				+ enemy.getCoordinate() + ":    "
 				+ BattleCalc.formatProbArray(probs));
 		return calcWeightedSum(probs, enemy.getQuantity()) / 100.0;
 	}
-	
+
 	/**
-	 * Gets most probable damage received by unit unit moving to from and
-	 * attacking the enemy unit on enemyCoord.
+	 * Gets most probable damage received by unit unit moving to fromCoord and
+	 * attacking the enemy unit on enemyCoord. Accounts for range.
 	 * 
 	 * @param game
 	 *            the game state
@@ -56,25 +61,29 @@ public class BattleCalcUtil {
 	 *            the map info
 	 * @param unit
 	 *            the attacking unit
-	 * @param from
+	 * @param fromCoord
 	 *            the attacking unit's location for the attack
 	 * @param enemyCoord
 	 *            the defending unit's location
 	 * @param bonus
-	 * @return the most probable damage received by unit moving to from and
+	 * @return the most probable damage received by unit moving to fromCoord and
 	 *         attacking the enemy unit on enemyCoord.
 	 * @throws IOException
 	 * @throws JDOMException
 	 */
 	public static double getMostProbableDamageReceived(Game game,
-			WeewarMap wmap, Unit unit, Coordinate from, Coordinate enemyCoord,
-			int bonus) throws IOException, JDOMException {
+			WeewarMap wmap, Unit unit, Coordinate fromCoord,
+			Coordinate enemyCoord, int bonus) throws IOException, JDOMException {
 		Unit enemy = game.getUnit(enemyCoord);
-		double[] probs = BattleCalc
-				.getProbabilities(enemy.getQuantity(), enemy.getType(), wmap
-						.get(enemy.getCoordinate()).getType(), unit
-						.getQuantity(), unit.getType(), wmap.get(from)
-						.getType(), bonus);
+		
+		int dist = fromCoord.getDirectDistance(enemyCoord);
+		if (dist < enemy.getMinRange(unit) || enemy.getMaxRange(unit) < dist)
+			return 0;
+		
+		double[] probs = BattleCalc.getProbabilities(enemy.getQuantity(), enemy
+				.getType(), wmap.get(enemy.getCoordinate()).getType(), unit
+				.getQuantity(), unit.getType(), wmap.get(fromCoord).getType(),
+				bonus);
 		System.out.println("        .. recv'd from " + enemy.getType() + " at "
 				+ enemy.getCoordinate() + ": "
 				+ BattleCalc.formatProbArray(probs));

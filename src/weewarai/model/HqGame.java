@@ -17,7 +17,6 @@ public class HqGame {
 	private String state;
 	private String url;
 	private int round;
-	private int baseIncome;
 	private boolean hasPendingInvites;
 	private int pace;
 	private boolean isBasic;
@@ -83,7 +82,8 @@ public class HqGame {
 		}
 
 		if (ele.getChildText("creditsPerBase") != null) {
-			setBaseIncome(Integer.parseInt(ele.getChildText("creditsPerBase")));
+			setCreditsPerBase(Integer.parseInt(ele
+					.getChildText("creditsPerBase")));
 		}
 
 		if (ele.getChildText("pace") != null) { // 86400 = 1 day
@@ -216,21 +216,6 @@ public class HqGame {
 	 */
 	public void setRound(int round) {
 		this.round = round;
-	}
-
-	/**
-	 * @return the baseIncome
-	 */
-	public int getBaseIncome() {
-		return baseIncome;
-	}
-
-	/**
-	 * @param baseIncome
-	 *            the baseIncome to set
-	 */
-	public void setBaseIncome(int baseIncome) {
-		this.baseIncome = baseIncome;
 	}
 
 	/**

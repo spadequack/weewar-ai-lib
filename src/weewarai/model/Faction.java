@@ -30,7 +30,11 @@ public class Faction {
 		if (ele.getAttributeValue("credits") != null) {
 			setCredits(Integer.parseInt(ele.getAttributeValue("credits")));
 		}
-		units.clear();
+		
+		getStats().reset();
+		getUnits().clear();
+		getCapturedTerrains().clear();
+		
 		for (Element unitEle : (List<Element>) ele.getChildren("unit")) {
 			Unit u = new Unit();
 			u.parseXmlElement(unitEle);
@@ -38,7 +42,6 @@ public class Faction {
 			getUnits().add(u);
 			getStats().addUnit(u);
 		}
-		capturedTerrains.clear();
 		for (Element terrainEle : (List<Element>) ele.getChildren("terrain")) {
 			// get the list of captured terrains of this faction
 			Terrain t = new Terrain();
@@ -49,6 +52,7 @@ public class Faction {
 			} else {
 				System.out.println("That's weird... " + t.getType()
 						+ " is owned by " + getPlayerName());
+				throw new RuntimeException("api error...?");
 			}
 		}
 	}

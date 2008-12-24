@@ -52,7 +52,7 @@ public class WeewarMap {
 			Unit unit) {
 		int distance = Integer.MAX_VALUE;
 
-		if (start.getDistanceInStraightLine(end) == 1) {
+		if (start.getDirectDistance(end) == 1) {
 			Terrain terrain = get(end);
 			// terrain must be on the map
 			if (terrain != null) {
