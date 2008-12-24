@@ -134,7 +134,6 @@ public class Eliza {
 	private Element getGameXmlElement(int id) throws IOException, JDOMException {
 		String xml = httpRequest(apiUrlPrefix + "game/" + id, username, token,
 				null);
-		System.out.println(xml);
 		SAXBuilder builder = new SAXBuilder();
 		Document doc = builder.build(new StringReader(xml));
 		return doc.getRootElement();

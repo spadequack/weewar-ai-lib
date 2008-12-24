@@ -55,7 +55,7 @@ public class MovementPath {
 	/** The distance for the last move possible. */
 	private static int LAST_MOVE = 9998;
 	private static int LAST_NODE = 9999;
-	
+
 	// getting rid of magic numbers
 	private static int UNPASSABLE = Specs.UNPASSABLE;
 
@@ -65,10 +65,10 @@ public class MovementPath {
 	 * we compare the coordinates themselves.
 	 */
 	private final Comparator<Coordinate> shortestDistanceComparator = new Comparator<Coordinate>() {
-		public int compare(Coordinate left, Coordinate right) {
+		public int compare(Coordinate first, Coordinate second) {
 			// note that this trick doesn't work for huge distances, close to
 			// Integer.MAX_VALUE
-			int result = getShortestDistance(left) - getShortestDistance(right);
+			int result = getShortestDistance(first) - getShortestDistance(second);
 
 			return result;
 			// TODO look into
@@ -181,7 +181,6 @@ public class MovementPath {
 	private void relaxNeighbors(Coordinate u, int maxMoveCost,
 			boolean ignoreUnits) {
 		Faction unitFaction = unit.getFaction();
-
 		List<Unit> myUnits = unitFaction.getUnits();
 
 		List<Coordinate> circle1 = u.getCircle(1);
@@ -194,6 +193,7 @@ public class MovementPath {
 
 			int nextStepDistance = wmap.getDistanceForUnitType(u, v, unit);
 			int shortDist = getShortestDistance(u) + nextStepDistance;
+			// a bit redundant && check
 			if ((shortDist < UNPASSABLE) && (nextStepDistance < UNPASSABLE)) {
 				Unit unitOnWay = game.getUnit(v);
 				if ((unitOnWay != null) && !ignoreUnits) {
@@ -201,26 +201,6 @@ public class MovementPath {
 						if (unit.canExertZocOn(unitOnWay)) {
 							shortDist = UNPASSABLE;
 						}
-
-						// // air units blocked by air units, all others blocked
-						// by
-						// // any unit - is this true?
-						// if (unit.isOfUnitType(Unit.Air_Type)) {
-						// if (unitOnWay.isOfUnitType(Unit.Air_Type)) {
-						// shortDist = BIG_NUM;
-						// } else {
-						// // subs can pass all
-						// }
-						// } else if (unit.isOfUnitType(Unit.Sub_Type)) {
-						// // do nothing
-						// } else {
-						// if ((unitOnWay.getType().equals(Unit.Submarine))
-						// && (!unitOnWay.canExertZocOn(unit))) {
-						// // do nothing
-						// } else {
-						// shortDist = BIG_NUM;
-						// }
-						// }
 					}
 				}
 

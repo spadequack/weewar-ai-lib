@@ -59,7 +59,7 @@ public class WeewarMap {
 				distance = terrain.getMovementCost(unit);
 			}
 		} else {
-			throw new RuntimeException("dont support step of more than 1");
+			throw new RuntimeException("Don't support step of more than 1");
 		}
 		return distance;
 	}

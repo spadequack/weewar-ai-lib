@@ -44,7 +44,6 @@ public class Faction {
 			Terrain t = new Terrain();
 			t.parseXmlElement(terrainEle);
 			if (t.isCapturable()) {
-				System.out.println("HELLO");
 				getCapturedTerrains().add(t);
 				getStats().addCapturable(t);
 			} else {

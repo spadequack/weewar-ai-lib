@@ -1,4 +1,4 @@
-package weewarai.util;
+package weewarai.datastr;
 
 import java.util.Collection;
 import java.util.Map;

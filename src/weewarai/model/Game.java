@@ -104,10 +104,6 @@ public class Game extends HqGame {
 	 */
 	public Faction getTerrainOwner(Terrain t) {
 		for (Faction faction : getFactions()) {
-			System.out.println("ARGH");
-			System.out.println(faction.getPlayerName());
-			System.out.println(faction.getCapturedTerrains());
-			System.out.println("testing: " + t);
 			if (faction.getCapturedTerrains().contains(t)) {
 				return faction;
 			}

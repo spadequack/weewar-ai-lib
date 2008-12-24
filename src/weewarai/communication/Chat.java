@@ -97,7 +97,6 @@ public class Chat {
 				int indexStart = messages.indexOf("action=\"") + 8;
 				int indexEnd = messages.indexOf("\"", indexStart);
 				String path = messages.substring(indexStart, indexEnd);
-				System.out.println("path = " + path);
 
 				int indexStartSession = path.indexOf(";") + 1;
 				String Session = path.substring(indexStartSession);

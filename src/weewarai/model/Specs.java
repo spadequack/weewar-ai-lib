@@ -3,7 +3,7 @@ package weewarai.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import weewarai.util.DefaultValueMap;
+import weewarai.datastr.DefaultValueMap;
 
 /**
  * This class contains the Weewar unit and terrain specifications for

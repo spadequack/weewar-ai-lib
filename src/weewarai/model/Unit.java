@@ -2,6 +2,7 @@ package weewarai.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.jdom.Element;
@@ -104,7 +105,9 @@ public class Unit {
 
 	/**
 	 * Returns whether this unit is of the given unit type (soft, hard, etc.)
-	 * @param type the type to be tested
+	 * 
+	 * @param type
+	 *            the type to be tested
 	 * @return whether this unit is of the given unit type
 	 */
 	public boolean isOfUnitType(String type) {
@@ -116,28 +119,46 @@ public class Unit {
 	 * can when 1) this unit can attack the given unit and 2) this unit's
 	 * minimum range against the given unit is greater than 1
 	 * 
-	 * @param unit the unit to be tested against
+	 * @param unit
+	 *            the unit to be tested against
 	 * @return whether this unit can exert ZoC on the given unit
 	 */
 	public boolean canExertZocOn(Unit unit) {
 		return Specs.unitAttack.get(getType()).get(unit.getUnitType()) > 0
-				&& Specs.unitMinRange.get(getType()).get(unit.getUnitType()) > 1;
+				&& Specs.unitMinRange.get(getType()).get(unit.getUnitType()) == 1;
 	}
 
 	/**
 	 * Returns the unit type (soft, hard, etc.) of this unit
+	 * 
 	 * @return the unit type (soft, hard, etc.) of this unit
 	 */
 	public String getUnitType() {
 		return Specs.unitTypes.get(getType());
 	}
-	
+
 	public boolean canEnterEnemyHarbor() {
 		return Specs.unitCanEnterEnemyHarbor.get(getType());
 	}
-	
+
 	public int getMovementPointsFirstMove() {
 		return Specs.unitMobilityFirst.get(getType());
+	}
+	
+	public int getMinRange(Unit target) {
+		return Specs.unitMinRange.get(getType()).get(target.getUnitType());
+	}
+	
+	public int getMaxRange(Unit target) {
+		return Specs.unitMaxRange.get(getType()).get(target.getUnitType());
+	}
+	
+	public int getMinRange() {
+		return Collections.min(Specs.unitMinRange.get(getType()).values());
+	}
+	
+	public int getMaxRange() {
+		return Collections.max(Specs.unitMaxRange.get(getType()).values());
 	}
 
 	// ////////////////// Getters and Setters //////////////////////
