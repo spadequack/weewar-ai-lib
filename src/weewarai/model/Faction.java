@@ -6,6 +6,7 @@ import java.util.List;
 import org.jdom.Element;
 
 import weewarai.stats.FactionStats;
+import weewarai.util.Debug;
 
 public class Faction {
 
@@ -50,7 +51,7 @@ public class Faction {
 				getCapturedTerrains().add(t);
 				getStats().addCapturable(t);
 			} else {
-				System.out.println("That's weird... " + t.getType()
+				Debug.print("That's weird... " + t.getType()
 						+ " is owned by " + getPlayerName());
 				throw new RuntimeException("api error...?");
 			}

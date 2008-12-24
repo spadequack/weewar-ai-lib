@@ -96,9 +96,10 @@ public class ElizaLocal {
 			Collections.sort(localCoords, comp);
 			Collections.sort(elizaCoords, comp);
 			if (!(localCoords.equals(elizaCoords))) {
-				System.out.println("Location: " + location);
-				System.out.println("Eliza: " + elizaCoords);
-				System.out.println("Local: " + localCoords);
+				Debug.print("getAttackCoords is broken");
+				Debug.print("Location: " + location);
+				Debug.print("Eliza: " + elizaCoords);
+				Debug.print("Local: " + localCoords);
 				throw new RuntimeException(
 						"getAttackCoords new implementation is broken");
 			}
@@ -237,9 +238,10 @@ public class ElizaLocal {
 			if (!(localCoords.equals(elizaCoords))) {
 				// eliza is broken for secondary move count
 				if (unit.getMoveCount() == 0) {
-					System.out.println("Location = " + location);
-					System.out.println("Local = " + localCoords);
-					System.out.println("Eliza = " + elizaCoords);
+					Debug.print("getMovementCoords is broken");
+					Debug.print("Location = " + location);
+					Debug.print("Local = " + localCoords);
+					Debug.print("Eliza = " + elizaCoords);
 
 					throw new RuntimeException(
 							"getMovementCoords new implementation is broken");

@@ -8,6 +8,7 @@ import weewarai.model.Coordinate;
 import weewarai.model.Game;
 import weewarai.model.Unit;
 import weewarai.model.WeewarMap;
+import weewarai.util.Debug;
 
 public class BattleCalcUtil {
 
@@ -45,7 +46,7 @@ public class BattleCalcUtil {
 		double[] probs = BattleCalc.getProbabilities(unit.getQuantity(), unit
 				.getType(), wmap.get(fromCoord).getType(), enemy.getQuantity(),
 				enemy.getType(), wmap.get(enemyCoord).getType(), bonus);
-		System.out.println("        .. dealt to " + enemy.getType() + " at "
+		Debug.print("Battle calc: dealt to " + enemy.getType() + " at "
 				+ enemy.getCoordinate() + ":    "
 				+ BattleCalc.formatProbArray(probs));
 		return calcWeightedSum(probs, enemy.getQuantity()) / 100.0;
@@ -84,7 +85,7 @@ public class BattleCalcUtil {
 				.getType(), wmap.get(enemy.getCoordinate()).getType(), unit
 				.getQuantity(), unit.getType(), wmap.get(fromCoord).getType(),
 				bonus);
-		System.out.println("        .. recv'd from " + enemy.getType() + " at "
+		Debug.print("Battle calc: received from " + enemy.getType() + " at "
 				+ enemy.getCoordinate() + ": "
 				+ BattleCalc.formatProbArray(probs));
 		return calcWeightedSum(probs, unit.getQuantity()) / 100.0;
