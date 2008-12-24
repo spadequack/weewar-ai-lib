@@ -1,6 +1,16 @@
 package weewarai.util;
 
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
+
+import weewarai.model.Coordinate;
+import weewarai.model.Faction;
+import weewarai.model.Game;
+import weewarai.model.Terrain;
+import weewarai.model.Unit;
+import weewarai.model.WeewarMap;
 
 public class Utils {
 
@@ -15,5 +25,101 @@ public class Utils {
 	 */
 	public static int dice(int n) {
 		return random.nextInt(n) + 1;
+	}
+
+	/**
+	 * Finds the Coordinates of all enemy units.
+	 * 
+	 * @param game
+	 *            the game state
+	 * @param myFaction
+	 *            the bot's faction
+	 * @return list of Coordinates of enemy units
+	 */
+	public static List<Coordinate> getEnemyUnits(Game game, Faction myFaction) {
+		List<Coordinate> targets = new LinkedList<Coordinate>();
+		for (Faction faction : game.getFactions()) {
+			if (faction == myFaction) {
+				continue;
+			}
+			for (Unit otherUnit : faction.getUnits()) {
+				targets.add(otherUnit.getCoordinate());
+			}
+		}
+		return targets;
+	}
+
+	/**
+	 * Finds the Coordinates of all enemy bases.
+	 * 
+	 * @param game
+	 *            the game state
+	 * @param wmap
+	 *            the map info
+	 * @param myFaction
+	 *            the bot's faction
+	 * @return list of Coordinates of enemy bases
+	 */
+	public static List<Coordinate> getEnemyBases(Game game, WeewarMap wmap,
+			Faction myFaction) {
+		List<Coordinate> targets = new LinkedList<Coordinate>();
+		Collection<Terrain> bases = wmap.getTerrainsByType(Terrain.Base);
+		for (Terrain base : bases) {
+			if (game.getTerrainOwner(base) != myFaction) {
+				targets.add(base.getCoordinate());
+			}
+		}
+		return targets;
+	}
+
+	/**
+	 * Finds the Coordinates of all enemy bases.
+	 * 
+	 * @param game
+	 *            the game state
+	 * @param wmap
+	 *            the map info
+	 * @param myFaction
+	 *            the bot's faction
+	 * @return list of Coordinates of enemy bases
+	 */
+	public static List<Coordinate> getOwnBases(Game game, WeewarMap wmap,
+			Faction myFaction) {
+		List<Coordinate> targets = new LinkedList<Coordinate>();
+		Collection<Terrain> bases = wmap.getTerrainsByType(Terrain.Base);
+		for (Terrain base : bases) {
+			if (game.getTerrainOwner(base) == myFaction) {
+				targets.add(base.getCoordinate());
+			}
+		}
+		return targets;
+	}
+
+	/**
+	 * Finds an unoccupied enemy or empty base from coords.
+	 * 
+	 * @param game
+	 *            the game state
+	 * @param wmap
+	 *            the map info
+	 * @param coords
+	 *            the coordinates to look for a base in
+	 * @param myFaction
+	 *            the bot's faction
+	 * @return an unoccupied enemy or empty base from coords; null if none
+	 *         exists
+	 */
+	public static Coordinate matchEnemyOrFreeBase(Game game, WeewarMap wmap,
+			Faction myFaction, List<Coordinate> coords) {
+		for (Coordinate c : coords) {
+			Terrain t = wmap.get(c);
+			Faction owner = game.getTerrainOwner(t);
+			if (t.getType().equals(Terrain.Base)
+					&& (owner == null || owner != myFaction)
+					&& game.getUnit(c) == null) {
+				return c;
+			}
+		}
+		return null;
 	}
 }
