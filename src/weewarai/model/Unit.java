@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.jdom.Element;
-
-import weewarai.datastr.DefaultValueMap;
 
 public class Unit {
 
@@ -147,7 +144,7 @@ public class Unit {
 		return !Specs.unitsCannotEnterEnemyHarbor.contains(getType());
 	}
 
-	public int getMovementPointsFirstMove() {
+	public int getMovementPoints() {
 		if (moveCount == 0)
 			return Specs.unitMobilityFirst.get(getType());
 		else if (moveCount == 1)

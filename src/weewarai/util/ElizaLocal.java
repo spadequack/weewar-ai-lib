@@ -44,7 +44,6 @@ public class ElizaLocal {
 				.getCircle(unit.getMinRange() - 1);
 		outerCircle.removeAll(innerCircle);
 		List<Coordinate> rangeRing = outerCircle;
-		System.out.println("Range ring: " + rangeRing);
 
 		for (Coordinate c : rangeRing) {
 			Unit u = game.getUnit(c);
@@ -114,14 +113,14 @@ public class ElizaLocal {
 	 * @param game
 	 * @param wmap
 	 * @param myFaction
-	 * @param location
 	 * @param unit
+	 * @param location
 	 * @return the movement coordinates of a unit from a particular coordinate
 	 */
 	public static List<Coordinate> getMovementCoords(Game game, WeewarMap wmap,
-			Faction myFaction, Coordinate location, Unit unit) {
+			Faction myFaction, Unit unit, Coordinate location) {
 
-		int maxMoveCost = unit.getMovementPointsFirstMove();
+		int maxMoveCost = unit.getMovementPoints();
 		// TODO deal with second move
 
 		List<Unit> myUnits = myFaction.getUnits();
@@ -131,29 +130,39 @@ public class ElizaLocal {
 
 		List<Coordinate> finishedList = new LinkedList<Coordinate>();
 		List<Coordinate> enemyList = new LinkedList<Coordinate>();
+		List<Coordinate> notOnMapList = new LinkedList<Coordinate>();
 
 		// remove finished units and enemy units
 		for (Coordinate resultListTarget : maxMoveCircle) {
-			Unit unitAtLocation = game.getUnit(resultListTarget);
-			if (unitAtLocation != null) {
-				if (myUnits.contains(unitAtLocation)) {
-					if (unitAtLocation.isFinished()) {
-						finishedList.add(resultListTarget);
+			if (wmap.get(resultListTarget) == null) {
+				notOnMapList.add(resultListTarget);
+			} else {
+				Unit unitAtLocation = game.getUnit(resultListTarget);
+				if (unitAtLocation != null) {
+					if (myUnits.contains(unitAtLocation)) {
+						if (unitAtLocation.isFinished()) {
+							finishedList.add(resultListTarget);
+						}
+					} else {
+						enemyList.add(resultListTarget);
 					}
-				} else {
-					enemyList.add(resultListTarget);
 				}
 			}
 		}
 
 		maxMoveCircle.removeAll(finishedList);
 		maxMoveCircle.removeAll(enemyList);
+		maxMoveCircle.removeAll(notOnMapList);
+		
+		System.out.println("maxmovecircle: " + maxMoveCircle);
 
 		// reworked
 		boolean ignoreUnits = false;
 		List<Coordinate> resultList = MovementPath.getMovesAtCostLessThan(wmap,
 				game, unit, location, maxMoveCost, Specs.MAX_MOVE_RANGE,
 				maxMoveCircle, ignoreUnits);
+		
+		System.out.println("resultlist: " + resultList);
 
 		for (Coordinate circle1Target : location.getCircle(1)) {
 			if (!location.equals(circle1Target)) {
@@ -196,12 +205,12 @@ public class ElizaLocal {
 	 * @param game
 	 * @param wmap
 	 * @param myFaction
-	 * @param location
 	 * @param unit
+	 * @param location
 	 * @return the movement coordinates of a unit from a particular coordinate
 	 */
 	public static List<Coordinate> getMovementCoords(Eliza eliza, Game game,
-			WeewarMap wmap, Faction myFaction, Coordinate location, Unit unit) {
+			WeewarMap wmap, Faction myFaction, Unit unit, Coordinate location) {
 
 		String type = unit.getType();
 		List<Coordinate> elizaCoords = null;
@@ -220,7 +229,7 @@ public class ElizaLocal {
 		}
 
 		List<Coordinate> localCoords = getMovementCoords(game, wmap, myFaction,
-				location, unit);
+				unit, location);
 
 		if ((elizaCoords != null)) {
 			Collections.sort(localCoords, comp);
@@ -228,9 +237,9 @@ public class ElizaLocal {
 			if (!(localCoords.equals(elizaCoords))) {
 				// eliza is broken for secondary move count
 				if (unit.getMoveCount() == 0) {
-					System.out.println("location = " + location);
-					System.out.println("resultList = " + localCoords);
-					System.out.println("coords = " + elizaCoords);
+					System.out.println("Location = " + location);
+					System.out.println("Local = " + localCoords);
+					System.out.println("Eliza = " + elizaCoords);
 
 					throw new RuntimeException(
 							"getMovementCoords new implementation is broken");

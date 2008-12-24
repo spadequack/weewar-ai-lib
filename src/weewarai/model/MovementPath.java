@@ -157,7 +157,7 @@ public class MovementPath {
 
 			settledNodes.add(u);
 
-			relaxNeighbors(u, unit.getMovementPointsFirstMove(), ignoreUnits);
+			relaxNeighbors(u, unit.getMovementPoints(), ignoreUnits);
 		}
 
 		ArrayList<Coordinate> l = new ArrayList<Coordinate>();

@@ -810,8 +810,8 @@ public class Specs {
 		Map<String, Integer> defaultIsFive = new DefaultValueMap<String, Integer>(
 				new HashMap<String, Integer>(), 5, DEFAULT_KEY);
 
-		unitMaxRange.put(Unit.Anti_Aircraft, defaultIsThree);
-		unitMaxRange.get(Unit.Anti_Aircraft).put(Unit.Air_Type, 1);
+		unitMaxRange.put(Unit.Anti_Aircraft, defaultIsOne);
+		unitMaxRange.get(Unit.Anti_Aircraft).put(Unit.Air_Type, 3);
 		unitMaxRange.put(Unit.Assault_Artillery, defaultIsTwo);
 		unitMaxRange.put(Unit.Battleship, defaultIsFour);
 		unitMaxRange.put(Unit.Berserker, defaultIsOne);
