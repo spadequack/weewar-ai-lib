@@ -1,6 +1,8 @@
 package weewarai.model;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import weewarai.datastr.DefaultValueMap;
@@ -291,10 +293,10 @@ public class Specs {
 		woods.put(Unit.Boat_Type, 0);
 		terrainDefense.put(Terrain.Woods, woods);
 	}
-	
+
 	/** Movement cost that represents the unit cannot move there */
 	public static final int UNPASSABLE = 999999;
-	
+
 	/** Max number of tiles that a unit can move in one move */
 	public static final int MAX_MOVE_RANGE = 6;
 
@@ -752,6 +754,8 @@ public class Specs {
 		unitTypes.put(Unit.Trooper, Unit.Soft_Type);
 	}
 
+	private static final String DEFAULT_KEY = "default";
+
 	/** Unit types (Name: (Type: MinRange)) */
 	public static Map<String, Map<String, Integer>> unitMinRange = new HashMap<String, Map<String, Integer>>();
 
@@ -761,11 +765,11 @@ public class Specs {
 		// unitMaxRange. this would be useful if it varied, like how Anti-Air
 		// have a different max range vs air than vs all others
 		Map<String, Integer> defaultIsOne = new DefaultValueMap<String, Integer>(
-				new HashMap<String, Integer>(), 1);
+				new HashMap<String, Integer>(), 1, DEFAULT_KEY);
 		Map<String, Integer> defaultIsTwo = new DefaultValueMap<String, Integer>(
-				new HashMap<String, Integer>(), 2);
+				new HashMap<String, Integer>(), 2, DEFAULT_KEY);
 		Map<String, Integer> defaultIsThree = new DefaultValueMap<String, Integer>(
-				new HashMap<String, Integer>(), 3);
+				new HashMap<String, Integer>(), 3, DEFAULT_KEY);
 		unitMinRange.put(Unit.Anti_Aircraft, defaultIsOne);
 		unitMinRange.put(Unit.Assault_Artillery, defaultIsOne);
 		unitMinRange.put(Unit.Battleship, defaultIsOne);
@@ -796,15 +800,15 @@ public class Specs {
 		// this is necessary since Anti-Air have a different max range vs air
 		// than vs all others
 		Map<String, Integer> defaultIsOne = new DefaultValueMap<String, Integer>(
-				new HashMap<String, Integer>(), 1);
+				new HashMap<String, Integer>(), 1, DEFAULT_KEY);
 		Map<String, Integer> defaultIsTwo = new DefaultValueMap<String, Integer>(
-				new HashMap<String, Integer>(), 2);
+				new HashMap<String, Integer>(), 2, DEFAULT_KEY);
 		Map<String, Integer> defaultIsThree = new DefaultValueMap<String, Integer>(
-				new HashMap<String, Integer>(), 3);
+				new HashMap<String, Integer>(), 3, DEFAULT_KEY);
 		Map<String, Integer> defaultIsFour = new DefaultValueMap<String, Integer>(
-				new HashMap<String, Integer>(), 4);
+				new HashMap<String, Integer>(), 4, DEFAULT_KEY);
 		Map<String, Integer> defaultIsFive = new DefaultValueMap<String, Integer>(
-				new HashMap<String, Integer>(), 5);
+				new HashMap<String, Integer>(), 5, DEFAULT_KEY);
 
 		unitMaxRange.put(Unit.Anti_Aircraft, defaultIsThree);
 		unitMaxRange.get(Unit.Anti_Aircraft).put(Unit.Air_Type, 1);
@@ -828,14 +832,13 @@ public class Specs {
 		unitMaxRange.put(Unit.Trooper, defaultIsOne);
 	}
 
-	/** Unit types (Name: canEnterEnemyHarbor) */
-	public static Map<String, Boolean> unitCanEnterEnemyHarbor = new DefaultValueMap<String, Boolean>(
-			new HashMap<String, Boolean>(), true);
+	/** Units that cannot enter enemy harbors */
+	public static List<String> unitsCannotEnterEnemyHarbor = new LinkedList<String>();
 
 	static {
-		unitCanEnterEnemyHarbor.put(Unit.Battleship, false);
-		unitCanEnterEnemyHarbor.put(Unit.Destroyer, false);
-		unitCanEnterEnemyHarbor.put(Unit.Submarine, false);
+		unitsCannotEnterEnemyHarbor.add(Unit.Battleship);
+		unitsCannotEnterEnemyHarbor.add(Unit.Destroyer);
+		unitsCannotEnterEnemyHarbor.add(Unit.Submarine);
 	}
 
 }

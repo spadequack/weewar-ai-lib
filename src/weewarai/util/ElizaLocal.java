@@ -39,12 +39,12 @@ public class ElizaLocal {
 			Faction myFaction, Unit unit, Coordinate location) {
 		List<Coordinate> coords = new LinkedList<Coordinate>();
 
-		List<Coordinate> outerCircle = unit.getCoordinate().getCircle(
-				unit.getMaxRange());
-		List<Coordinate> innerCircle = unit.getCoordinate().getCircle(
-				unit.getMinRange());
+		List<Coordinate> outerCircle = location.getCircle(unit.getMaxRange());
+		List<Coordinate> innerCircle = location
+				.getCircle(unit.getMinRange() - 1);
 		outerCircle.removeAll(innerCircle);
 		List<Coordinate> rangeRing = outerCircle;
+		System.out.println("Range ring: " + rangeRing);
 
 		for (Coordinate c : rangeRing) {
 			Unit u = game.getUnit(c);
@@ -67,19 +67,19 @@ public class ElizaLocal {
 	 * @param eliza
 	 * @param game
 	 * @param myFaction
-	 * @param location
 	 * @param unit
+	 * @param location
 	 * @return the attack coordinates of a unit from a particular coordinate
 	 */
-	public List<Coordinate> getAttackCoords(Eliza eliza, Game game,
-			Faction myFaction, Coordinate location, Unit unit) {
+	public static List<Coordinate> getAttackCoords(Eliza eliza, Game game,
+			Faction myFaction, Unit unit, Coordinate location) {
 
 		String type = unit.getType();
 		List<Coordinate> elizaCoords = null;
 
 		// only check a small sample of cases for errors
 		int randomChoice = Utils.dice(100);
-		if (randomChoice < checkAttackCoordsRatio) {
+		if (randomChoice <= checkAttackCoordsRatio) {
 			try {
 				elizaCoords = eliza.getAttackCoords(game.getId(), location,
 						type);
@@ -90,12 +90,16 @@ public class ElizaLocal {
 			}
 		}
 
-		List<Coordinate> localCoords = getAttackCoords(game, myFaction, unit, location);
+		List<Coordinate> localCoords = getAttackCoords(game, myFaction, unit,
+				location);
 
 		if (elizaCoords != null) {
 			Collections.sort(localCoords, comp);
 			Collections.sort(elizaCoords, comp);
 			if (!(localCoords.equals(elizaCoords))) {
+				System.out.println("Location: " + location);
+				System.out.println("Eliza: " + elizaCoords);
+				System.out.println("Local: " + localCoords);
 				throw new RuntimeException(
 						"getAttackCoords new implementation is broken");
 			}
@@ -104,8 +108,18 @@ public class ElizaLocal {
 		return localCoords;
 	}
 
-	public static List<Coordinate> getMovementCoordsLocal(Game game,
-			WeewarMap wmap, Faction myFaction, Coordinate location, Unit unit) {
+	/**
+	 * Returns the movement coordinates of a unit from a particular coordinate.
+	 * 
+	 * @param game
+	 * @param wmap
+	 * @param myFaction
+	 * @param location
+	 * @param unit
+	 * @return the movement coordinates of a unit from a particular coordinate
+	 */
+	public static List<Coordinate> getMovementCoords(Game game, WeewarMap wmap,
+			Faction myFaction, Coordinate location, Unit unit) {
 
 		int maxMoveCost = unit.getMovementPointsFirstMove();
 		// TODO deal with second move
@@ -115,19 +129,25 @@ public class ElizaLocal {
 		List<Coordinate> maxMoveCircle = location
 				.getCircle(Specs.MAX_MOVE_RANGE);
 
+		List<Coordinate> finishedList = new LinkedList<Coordinate>();
+		List<Coordinate> enemyList = new LinkedList<Coordinate>();
+
 		// remove finished units and enemy units
 		for (Coordinate resultListTarget : maxMoveCircle) {
 			Unit unitAtLocation = game.getUnit(resultListTarget);
 			if (unitAtLocation != null) {
 				if (myUnits.contains(unitAtLocation)) {
 					if (unitAtLocation.isFinished()) {
-						maxMoveCircle.remove(resultListTarget);
+						finishedList.add(resultListTarget);
 					}
 				} else {
-					maxMoveCircle.remove(resultListTarget);
+					enemyList.add(resultListTarget);
 				}
 			}
 		}
+
+		maxMoveCircle.removeAll(finishedList);
+		maxMoveCircle.removeAll(enemyList);
 
 		// reworked
 		boolean ignoreUnits = false;
@@ -154,18 +174,33 @@ public class ElizaLocal {
 
 		// a sub, destroyer and battleship can not move onto an enemy base
 		if (!unit.canEnterEnemyHarbor()) {
+			List<Coordinate> enemyBases = new LinkedList<Coordinate>();
 			for (Coordinate movementLocations : resultList) {
 				Faction terrainOwner = game.getTerrainOwner(movementLocations);
 				if ((terrainOwner != null) && (!terrainOwner.equals(myFaction))) {
-					resultList.remove(movementLocations);
+					enemyBases.add(movementLocations);
 				}
 			}
+			resultList.remove(enemyBases);
 		}
 
 		return resultList;
 	}
 
-	public List<Coordinate> getMovementCoords(Eliza eliza, Game game,
+	/**
+	 * Returns the movement coordinates of a unit from a particular coordinate.
+	 * Also performs random check against the Eliza implementation to make sure
+	 * the local version is accurate.
+	 * 
+	 * @param eliza
+	 * @param game
+	 * @param wmap
+	 * @param myFaction
+	 * @param location
+	 * @param unit
+	 * @return the movement coordinates of a unit from a particular coordinate
+	 */
+	public static List<Coordinate> getMovementCoords(Eliza eliza, Game game,
 			WeewarMap wmap, Faction myFaction, Coordinate location, Unit unit) {
 
 		String type = unit.getType();
@@ -173,7 +208,7 @@ public class ElizaLocal {
 
 		// only check a small sample of cases for errors
 		int randomChoice = Utils.dice(100);
-		if (randomChoice < checkAttackCoordsRatio) {
+		if (randomChoice <= checkAttackCoordsRatio) {
 			try {
 				elizaCoords = eliza.getMovementCoords(game.getId(), location,
 						type);
@@ -184,8 +219,8 @@ public class ElizaLocal {
 			}
 		}
 
-		List<Coordinate> localCoords = getMovementCoordsLocal(game, wmap,
-				myFaction, location, unit);
+		List<Coordinate> localCoords = getMovementCoords(game, wmap, myFaction,
+				location, unit);
 
 		if ((elizaCoords != null)) {
 			Collections.sort(localCoords, comp);
@@ -202,7 +237,7 @@ public class ElizaLocal {
 				}
 			}
 		}
-		
+
 		return localCoords;
 	}
 }

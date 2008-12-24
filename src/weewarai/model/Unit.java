@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.jdom.Element;
+
+import weewarai.datastr.DefaultValueMap;
 
 public class Unit {
 
@@ -141,7 +144,7 @@ public class Unit {
 	}
 
 	public boolean canEnterEnemyHarbor() {
-		return Specs.unitCanEnterEnemyHarbor.get(getType());
+		return !Specs.unitsCannotEnterEnemyHarbor.contains(getType());
 	}
 
 	public int getMovementPointsFirstMove() {

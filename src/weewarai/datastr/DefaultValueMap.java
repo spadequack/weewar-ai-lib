@@ -16,11 +16,15 @@ public class DefaultValueMap<K, V> implements Map<K, V> {
 	private Map<K, V> backingMap;
 	private V defaultValue;
 
-	public DefaultValueMap(Map<K, V> backingMap, V defaultValue) {
+	public DefaultValueMap(Map<K, V> backingMap, V defaultValue, K uniqueDefaultKey) {
 		this.backingMap = backingMap;
 		this.defaultValue = defaultValue;
+		// the uniqueDefaulyKey is necessary for the iterator to work on an
+		// "empty" map
+		backingMap.put(uniqueDefaultKey, defaultValue);
 	}
 
+	@Override
 	public V get(Object o) {
 		V value = backingMap.get(o);
 		if (value == null)
