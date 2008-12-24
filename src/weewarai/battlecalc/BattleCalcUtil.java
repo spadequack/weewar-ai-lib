@@ -46,10 +46,11 @@ public class BattleCalcUtil {
 		double[] probs = BattleCalc.getProbabilities(unit.getQuantity(), unit
 				.getType(), wmap.get(fromCoord).getType(), enemy.getQuantity(),
 				enemy.getType(), wmap.get(enemyCoord).getType(), bonus);
+		double weightedSum = calcWeightedSum(probs, enemy.getQuantity()) / 100.0;
 		Debug.print("Battle calc: dealt to " + enemy.getType() + " at "
-				+ enemy.getCoordinate() + ":    "
-				+ BattleCalc.formatProbArray(probs));
-		return calcWeightedSum(probs, enemy.getQuantity()) / 100.0;
+				+ enemy.getCoordinate() + "from " + fromCoord + ": ("
+				+ weightedSum + ") " + BattleCalc.formatProbArray(probs));
+		return weightedSum;
 	}
 
 	/**
@@ -76,19 +77,20 @@ public class BattleCalcUtil {
 			WeewarMap wmap, Unit unit, Coordinate fromCoord,
 			Coordinate enemyCoord, int bonus) throws IOException, JDOMException {
 		Unit enemy = game.getUnit(enemyCoord);
-		
+
 		int dist = fromCoord.getDirectDistance(enemyCoord);
 		if (dist < enemy.getMinRange(unit) || enemy.getMaxRange(unit) < dist)
 			return 0;
-		
+
 		double[] probs = BattleCalc.getProbabilities(enemy.getQuantity(), enemy
 				.getType(), wmap.get(enemy.getCoordinate()).getType(), unit
 				.getQuantity(), unit.getType(), wmap.get(fromCoord).getType(),
 				bonus);
+		double weightedSum = calcWeightedSum(probs, unit.getQuantity()) / 100.0;
 		Debug.print("Battle calc: received from " + enemy.getType() + " at "
-				+ enemy.getCoordinate() + ": "
-				+ BattleCalc.formatProbArray(probs));
-		return calcWeightedSum(probs, unit.getQuantity()) / 100.0;
+				+ enemy.getCoordinate() + "from " + fromCoord + ": ("
+				+ weightedSum + ") " + BattleCalc.formatProbArray(probs));
+		return weightedSum;
 	}
 
 	/**

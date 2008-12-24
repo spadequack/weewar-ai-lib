@@ -170,6 +170,16 @@ public class Unit {
 		return Collections.max(Specs.unitMaxRange.get(getType()).values());
 	}
 
+	public boolean repair() {
+		if (getQuantity() <= 0)
+			return false;
+		// TODO handle that air can only repair on airfields and units on repair
+		// patches repair different amount
+		setQuantity(Math.min(getQuantity()
+				+ Specs.unitRepairAmount.get(getType()), Specs.MAX_QUANTITY));
+		return true;
+	}
+
 	// ////////////////// Getters and Setters //////////////////////
 
 	/**

@@ -155,16 +155,12 @@ public class ElizaLocal {
 		maxMoveCircle.removeAll(enemyList);
 		maxMoveCircle.removeAll(notOnMapList);
 		
-		System.out.println("maxmovecircle: " + maxMoveCircle);
-
 		// reworked
 		boolean ignoreUnits = false;
 		List<Coordinate> resultList = MovementPath.getMovesAtCostLessThan(wmap,
 				game, unit, location, maxMoveCost, Specs.MAX_MOVE_RANGE,
 				maxMoveCircle, ignoreUnits);
 		
-		System.out.println("resultlist: " + resultList);
-
 		for (Coordinate circle1Target : location.getCircle(1)) {
 			if (!location.equals(circle1Target)) {
 				Unit unitAtLocation = game.getUnit(circle1Target);

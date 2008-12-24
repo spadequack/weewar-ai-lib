@@ -18,7 +18,7 @@ import weewarai.datastr.DefaultValueMap;
 public class Specs {
 
 	/** Build costs for each unit */
-	public static Map<String, Integer> buildCost = new HashMap<String, Integer>();
+	public static final Map<String, Integer> buildCost = new HashMap<String, Integer>();
 
 	static {
 		// basic units
@@ -49,7 +49,7 @@ public class Specs {
 	}
 
 	/** Terrain attack specs (Name: (Type: Terrain Effect on Attack)) */
-	public static Map<String, Map<String, Integer>> terrainAttack = new HashMap<String, Map<String, Integer>>();
+	public static final Map<String, Map<String, Integer>> terrainAttack = new HashMap<String, Map<String, Integer>>();
 
 	static {
 		Map<String, Integer> airfield = new HashMap<String, Integer>();
@@ -172,7 +172,7 @@ public class Specs {
 	}
 
 	/** Terrain defense specs (Name: (Type: Terrain Effect on Defense)) */
-	public static Map<String, Map<String, Integer>> terrainDefense = new HashMap<String, Map<String, Integer>>();
+	public static final Map<String, Map<String, Integer>> terrainDefense = new HashMap<String, Map<String, Integer>>();
 
 	static {
 		Map<String, Integer> airfield = new HashMap<String, Integer>();
@@ -301,7 +301,7 @@ public class Specs {
 	public static final int MAX_MOVE_RANGE = 6;
 
 	/** Terrain movement specs (Name: (Type: Movement Cost)) */
-	public static Map<String, Map<String, Integer>> terrainMovement = new HashMap<String, Map<String, Integer>>();
+	public static final Map<String, Map<String, Integer>> terrainMovement = new HashMap<String, Map<String, Integer>>();
 
 	static {
 		Map<String, Integer> airfield = new HashMap<String, Integer>();
@@ -424,7 +424,7 @@ public class Specs {
 	}
 
 	/** Unit attack specs (Name: (Type: Attack Strength)) */
-	public static Map<String, Map<String, Integer>> unitAttack = new HashMap<String, Map<String, Integer>>();
+	public static final Map<String, Map<String, Integer>> unitAttack = new HashMap<String, Map<String, Integer>>();
 
 	static {
 		Map<String, Integer> antiAircraft = new HashMap<String, Integer>();
@@ -655,7 +655,7 @@ public class Specs {
 	}
 
 	/** Unit defense specs (Name: Defense Strength) */
-	public static Map<String, Integer> unitDefense = new HashMap<String, Integer>();
+	public static final Map<String, Integer> unitDefense = new HashMap<String, Integer>();
 
 	static {
 		unitDefense.put(Unit.Anti_Aircraft, 4);
@@ -680,7 +680,7 @@ public class Specs {
 	}
 
 	/** Unit mobility first move specs (Name: Movement Points) */
-	public static Map<String, Integer> unitMobilityFirst = new HashMap<String, Integer>();
+	public static final Map<String, Integer> unitMobilityFirst = new HashMap<String, Integer>();
 
 	static {
 		unitMobilityFirst.put(Unit.Anti_Aircraft, 9);
@@ -705,7 +705,7 @@ public class Specs {
 	}
 
 	/** Unit mobility second move sepcs (Name: Movement Points) */
-	public static Map<String, Integer> unitMobilitySecond = new HashMap<String, Integer>();
+	public static final Map<String, Integer> unitMobilitySecond = new HashMap<String, Integer>();
 
 	static {
 		unitMobilitySecond.put(Unit.Anti_Aircraft, 0);
@@ -730,7 +730,7 @@ public class Specs {
 	}
 
 	/** Unit types (Name: Type) */
-	public static Map<String, String> unitTypes = new HashMap<String, String>();
+	public static final Map<String, String> unitTypes = new HashMap<String, String>();
 
 	static {
 		unitTypes.put(Unit.Anti_Aircraft, Unit.Hard_Type);
@@ -757,7 +757,7 @@ public class Specs {
 	private static final String DEFAULT_KEY = "default";
 
 	/** Unit types (Name: (Type: MinRange)) */
-	public static Map<String, Map<String, Integer>> unitMinRange = new HashMap<String, Map<String, Integer>>();
+	public static final Map<String, Map<String, Integer>> unitMinRange = new HashMap<String, Map<String, Integer>>();
 
 	static {
 		// since the min range is the same against all unit types for each unit
@@ -791,10 +791,10 @@ public class Specs {
 		unitMinRange.put(Unit.Trooper, defaultIsOne);
 	}
 
-	public static int MAX_UNIT_RANGE = 5;
+	public static final int MAX_UNIT_RANGE = 5;
 
 	/** Unit types (Name: (Type: MaxRange)) */
-	public static Map<String, Map<String, Integer>> unitMaxRange = new HashMap<String, Map<String, Integer>>();
+	public static final Map<String, Map<String, Integer>> unitMaxRange = new HashMap<String, Map<String, Integer>>();
 
 	static {
 		// this is necessary since Anti-Air have a different max range vs air
@@ -833,12 +833,31 @@ public class Specs {
 	}
 
 	/** Units that cannot enter enemy harbors */
-	public static List<String> unitsCannotEnterEnemyHarbor = new LinkedList<String>();
+	public static final List<String> unitsCannotEnterEnemyHarbor = new LinkedList<String>();
 
 	static {
 		unitsCannotEnterEnemyHarbor.add(Unit.Battleship);
 		unitsCannotEnterEnemyHarbor.add(Unit.Destroyer);
 		unitsCannotEnterEnemyHarbor.add(Unit.Submarine);
 	}
+
+	public static final Map<String, Integer> unitRepairAmount = new DefaultValueMap<String, Integer>(
+			new HashMap<String, Integer>(), 2, DEFAULT_KEY);
+
+	static {
+		unitRepairAmount.put(Unit.Berserker, 1);
+		unitRepairAmount.put(Unit.Bomber, 3);
+		unitRepairAmount.put(Unit.DFA, 1);
+		unitRepairAmount.put(Unit.Heavy_Artillery, 1);
+		unitRepairAmount.put(Unit.Heavy_Trooper, 1);
+		unitRepairAmount.put(Unit.Helicopter, 3);
+		unitRepairAmount.put(Unit.Jetfighter, 3);
+		unitRepairAmount.put(Unit.Light_Artillery, 1);
+		unitRepairAmount.put(Unit.Trooper, 1);
+	}
+	
+	public static final int REPAIR_PATCH_REPAIR_AMT = 6;
+	
+	public static final int MAX_QUANTITY = 10;
 
 }
