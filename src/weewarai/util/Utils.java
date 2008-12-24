@@ -122,4 +122,19 @@ public class Utils {
 		}
 		return null;
 	}
+
+	public static LinkedList<Terrain> getBuildableBases(Game game,
+			Faction myFaction) {
+		LinkedList<Terrain> buildableBases = new LinkedList<Terrain>();
+		List<Terrain> terrains = myFaction.getCapturedTerrains();
+		for (Terrain terrain : terrains) {
+			boolean isBaseEmpty = (game.getUnit(terrain.getCoordinate()) == null);
+			boolean isBaseFinished = terrain.isFinished();
+	
+			if (isBaseEmpty && !isBaseFinished) {
+				buildableBases.add(terrain);
+			}
+		}
+		return buildableBases;
+	}
 }

@@ -294,6 +294,9 @@ public class Specs {
 	
 	/** Movement cost that represents the unit cannot move there */
 	public static final int UNPASSABLE = 999999;
+	
+	/** Max number of tiles that a unit can move in one move */
+	public static final int MAX_MOVE_RANGE = 6;
 
 	/** Terrain movement specs (Name: (Type: Movement Cost)) */
 	public static Map<String, Map<String, Integer>> terrainMovement = new HashMap<String, Map<String, Integer>>();

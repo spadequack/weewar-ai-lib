@@ -11,6 +11,7 @@ public class Unit {
 
 	private String type;
 	private boolean finished;
+	private int moveCount = 0;
 	private Coordinate coordinate;
 	private int quantity;
 	private Faction faction;
@@ -75,6 +76,8 @@ public class Unit {
 		allUnits.addAll(basicUnits);
 		allUnits.addAll(proUnits);
 	}
+
+	// /////////////////////////// Methods /////////////////////////////
 
 	public Unit() {
 	}
@@ -142,21 +145,27 @@ public class Unit {
 	}
 
 	public int getMovementPointsFirstMove() {
-		return Specs.unitMobilityFirst.get(getType());
+		if (moveCount == 0)
+			return Specs.unitMobilityFirst.get(getType());
+		else if (moveCount == 1)
+			return Specs.unitMobilitySecond.get(getType());
+		else {
+			throw new RuntimeException("move count is invalid: " + moveCount);
+		}
 	}
-	
+
 	public int getMinRange(Unit target) {
 		return Specs.unitMinRange.get(getType()).get(target.getUnitType());
 	}
-	
+
 	public int getMaxRange(Unit target) {
 		return Specs.unitMaxRange.get(getType()).get(target.getUnitType());
 	}
-	
+
 	public int getMinRange() {
 		return Collections.min(Specs.unitMinRange.get(getType()).values());
 	}
-	
+
 	public int getMaxRange() {
 		return Collections.max(Specs.unitMaxRange.get(getType()).values());
 	}
@@ -253,4 +262,25 @@ public class Unit {
 		this.isBasic = isBasic;
 	}
 
+	/**
+	 * @return the moveCount
+	 */
+	public int getMoveCount() {
+		return moveCount;
+	}
+
+	/**
+	 * @param moveCount
+	 *            the moveCount to set
+	 */
+	public void setMoveCount(int moveCount) {
+		this.moveCount = moveCount;
+	}
+
+	/**
+	 * Increments the move count by 1
+	 */
+	public void incrementMoveCount() {
+		moveCount++;
+	}
 }
