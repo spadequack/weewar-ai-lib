@@ -68,7 +68,8 @@ public class MovementPath {
 		public int compare(Coordinate first, Coordinate second) {
 			// note that this trick doesn't work for huge distances, close to
 			// Integer.MAX_VALUE
-			int result = getShortestDistance(first) - getShortestDistance(second);
+			int result = getShortestDistance(first)
+					- getShortestDistance(second);
 
 			return result;
 			// TODO look into
@@ -205,7 +206,7 @@ public class MovementPath {
 				}
 
 				// subs can not pass enemy bases
-				if (unit.canEnterEnemyHarbor()) {
+				if (unit.cannotEnterEnemyHarbor()) {
 					Faction terrainOwner = game.getTerrainOwner(u);
 					if ((terrainOwner != null)
 							&& (!terrainOwner.equals(unitFaction))) {
@@ -223,7 +224,7 @@ public class MovementPath {
 					}
 				}
 			}
-
+			
 			// if there is a real step possible
 			if (shortDist < UNPASSABLE) {
 				if (shortDist < getShortestDistance(v)) {

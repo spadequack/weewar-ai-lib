@@ -140,8 +140,8 @@ public class Unit {
 		return Specs.unitTypes.get(getType());
 	}
 
-	public boolean canEnterEnemyHarbor() {
-		return !Specs.unitsCannotEnterEnemyHarbor.contains(getType());
+	public boolean cannotEnterEnemyHarbor() {
+		return Specs.unitsCannotEnterEnemyHarbor.contains(getType());
 	}
 
 	public int getMovementPoints() {

@@ -151,6 +151,10 @@ public class Coordinate implements Serializable {
 			return c.x == x && c.y == y;
 		}
 	}
+	
+	public boolean equals(int x, int y) {
+		return this.x == x && this.y == y; 
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -182,7 +182,7 @@ public class ElizaLocal {
 		}
 
 		// a sub, destroyer and battleship can not move onto an enemy base
-		if (!unit.canEnterEnemyHarbor()) {
+		if (!unit.cannotEnterEnemyHarbor()) {
 			List<Coordinate> enemyBases = new LinkedList<Coordinate>();
 			for (Coordinate movementLocations : resultList) {
 				Faction terrainOwner = game.getTerrainOwner(movementLocations);
