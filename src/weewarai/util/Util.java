@@ -12,7 +12,7 @@ import weewarai.model.Terrain;
 import weewarai.model.Unit;
 import weewarai.model.WeewarMap;
 
-public class Utils {
+public class Util {
 
 	public static Random random = new Random();
 

@@ -77,7 +77,7 @@ public class ElizaLocal {
 		List<Coordinate> elizaCoords = null;
 
 		// only check a small sample of cases for errors
-		int randomChoice = Utils.dice(100);
+		int randomChoice = Util.dice(100);
 		if (randomChoice <= checkAttackCoordsRatio) {
 			try {
 				elizaCoords = eliza.getAttackCoords(game.getId(), location,
@@ -213,7 +213,7 @@ public class ElizaLocal {
 		List<Coordinate> elizaCoords = null;
 
 		// only check a small sample of cases for errors
-		int randomChoice = Utils.dice(100);
+		int randomChoice = Util.dice(100);
 		if (randomChoice <= checkAttackCoordsRatio) {
 			try {
 				elizaCoords = eliza.getMovementCoords(game.getId(), location,

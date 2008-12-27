@@ -3,12 +3,15 @@ package weewarai.util;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import weewarai.model.Coordinate;
 import weewarai.model.Game;
 import weewarai.model.MovementPath;
 import weewarai.model.Unit;
 import weewarai.model.WeewarMap;
+import weewarai.util.moveselectalgs.MoveSelectAlgorithm;
 
 public class MovementUtil {
 
@@ -86,18 +89,23 @@ public class MovementUtil {
 	 *            target
 	 * @param ignoreUnits
 	 *            whether to ignore units (i.e. don't consider ZoC)
+	 * @param selectAlg
+	 *            the move selection algorithm object that wraps a method used
+	 *            to select the best move - designed this way to allow using
+	 *            different selection algorithms at runtime
 	 * @return the shortest distance to the target, -1 if the best move is to
 	 *         stay
 	 */
 	public static int getBestMovementToTargets(Game game, WeewarMap wmap,
 			Unit unit, List<Coordinate> movementOptions,
 			Collection<Coordinate> targets, Coordinate bestMovement,
-			boolean ignoreUnits) {
+			boolean ignoreUnits, MoveSelectAlgorithm selectAlg) {
 
 		Debug.print("        Getting best movement to targets...");
 
 		int closestDistToTarget = Integer.MAX_VALUE;
-		List<Coordinate> bestMoves = new LinkedList<Coordinate>();
+		// map is sorted by distance
+		SortedMap<Integer, List<Coordinate>> bestMoves = new TreeMap<Integer, List<Coordinate>>();
 
 		for (Coordinate c : targets) {
 			for (Coordinate m : movementOptions) {
@@ -107,13 +115,9 @@ public class MovementUtil {
 				List<Coordinate> path = MovementPath.getShortestPathForUnit(
 						wmap, game, unit, m, c, ignoreUnits);
 				int dist = MovementPath.calculateMovementCost(path, wmap, unit);
-				if (dist < closestDistToTarget) {
-					closestDistToTarget = dist;
-					bestMoves.clear();
-					bestMoves.add(m);
-				} else if (dist == closestDistToTarget) {
-					bestMoves.add(m);
-				}
+				if (bestMoves.get(dist) == null)
+					bestMoves.put(dist, new LinkedList<Coordinate>());
+				bestMoves.get(dist).add(m);
 			}
 		}
 
@@ -121,27 +125,9 @@ public class MovementUtil {
 			return -1; // best move is to stay
 		}
 
-		List<Coordinate> newBestMoves = selectBestMovesByDefense(wmap, unit,
-				bestMoves);
+		List<Coordinate> newBestMoves = selectAlg.select(wmap, unit, bestMoves);
 		bestMovement.setCoordinate(selectRandom(newBestMoves));
 		return closestDistToTarget;
-	}
-
-	public static List<Coordinate> selectBestMovesByDefense(WeewarMap wmap,
-			Unit unit, List<Coordinate> possibleMoves) {
-		int highestTerrainDefMod = Integer.MIN_VALUE;
-		List<Coordinate> newBestMoves = new LinkedList<Coordinate>();
-		for (Coordinate m : possibleMoves) {
-			int terrainDefMod = wmap.get(m).getDefenseMod(unit);
-			if (highestTerrainDefMod < terrainDefMod) {
-				highestTerrainDefMod = terrainDefMod;
-				newBestMoves.clear();
-				newBestMoves.add(m);
-			} else if (terrainDefMod == highestTerrainDefMod) {
-				newBestMoves.add(m);
-			}
-		}
-		return newBestMoves;
 	}
 
 	/**
@@ -152,7 +138,7 @@ public class MovementUtil {
 	 * @return a random element from list
 	 */
 	public static Coordinate selectRandom(List<Coordinate> list) {
-		int n = Utils.dice(list.size());
+		int n = Util.dice(list.size());
 		Debug.print("        .. Selected " + list.get(n - 1)
 				+ " randomly from " + list);
 		return list.get(n - 1);
