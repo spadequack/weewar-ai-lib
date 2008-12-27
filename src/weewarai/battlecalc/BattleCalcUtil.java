@@ -46,9 +46,10 @@ public class BattleCalcUtil {
 		double[] probs = BattleCalc.getProbabilities(unit.getQuantity(), unit
 				.getType(), wmap.get(fromCoord).getType(), enemy.getQuantity(),
 				enemy.getType(), wmap.get(enemyCoord).getType(), bonus);
-		double weightedSum = calcWeightedSum(probs, enemy.getQuantity()) / 100.0;
+		double weightedSum = Math.round(calcWeightedSum(probs, enemy
+				.getQuantity())) / 100.0;
 		Debug.print("Battle calc: dealt to " + enemy.getType() + " at "
-				+ enemy.getCoordinate() + "from " + fromCoord + ": ("
+				+ enemy.getCoordinate() + " from " + fromCoord + ": ("
 				+ weightedSum + ") " + BattleCalc.formatProbArray(probs));
 		return weightedSum;
 	}
@@ -86,9 +87,10 @@ public class BattleCalcUtil {
 				.getType(), wmap.get(enemy.getCoordinate()).getType(), unit
 				.getQuantity(), unit.getType(), wmap.get(fromCoord).getType(),
 				bonus);
-		double weightedSum = calcWeightedSum(probs, unit.getQuantity()) / 100.0;
+		double weightedSum = Math.round(calcWeightedSum(probs, unit
+				.getQuantity())) / 100.0;
 		Debug.print("Battle calc: received from " + enemy.getType() + " at "
-				+ enemy.getCoordinate() + "from " + fromCoord + ": ("
+				+ enemy.getCoordinate() + " from " + fromCoord + ": ("
 				+ weightedSum + ") " + BattleCalc.formatProbArray(probs));
 		return weightedSum;
 	}

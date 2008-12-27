@@ -22,6 +22,7 @@ import weewarai.model.Faction;
 import weewarai.model.Game;
 import weewarai.model.HqGame;
 import weewarai.model.WeewarMap;
+import weewarai.util.Debug;
 
 public class Eliza {
 
@@ -279,6 +280,7 @@ public class Eliza {
 	@SuppressWarnings("unchecked")
 	public List<Coordinate> getAttackCoords(int id, Coordinate from, String type)
 			throws IOException, JDOMException {
+		Debug.print("eliza: getAttackCoords");
 		String requestXML = "<weewar game='" + id + "'><attackOptions x='"
 				+ from.getX() + "' y='" + from.getY() + "' type='" + type
 				+ "' /></weewar>";
@@ -299,6 +301,7 @@ public class Eliza {
 	@SuppressWarnings("unchecked")
 	public List<Coordinate> getMovementCoords(int id, Coordinate from,
 			String type) throws IOException, JDOMException {
+		Debug.print("eliza: getMovementCoords");
 		String requestXML = "<weewar game='" + id + "'><movementOptions x='"
 				+ from.getX() + "' y='" + from.getY() + "' type='" + type
 				+ "' /></weewar>";

@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import weewarai.model.Coordinate;
 import weewarai.model.Faction;
 import weewarai.model.Specs;
 import weewarai.model.Terrain;
 import weewarai.model.Unit;
+import weewarai.util.Debug;
 
 /**
  * @author pluto, spadequack
@@ -47,7 +49,7 @@ public class FactionStats {
 			}
 		}
 	}
-	
+
 	public void reset() {
 		for (String s : Unit.allUnits) {
 			unitCountMap.put(s, 0);
@@ -65,7 +67,7 @@ public class FactionStats {
 		unitCountMap.put(unit.getType(), unitCountMap.get(unit.getType()) + 1);
 		totalUnits++;
 	}
-	
+
 	public Map<String, Integer> getUnitCountMap() {
 		return unitCountMap;
 	}
@@ -94,7 +96,7 @@ public class FactionStats {
 		capturableCountMap.put(capturable.getType(), capturableCountMap
 				.get(capturable.getType()) + 1);
 	}
-	
+
 	public Map<String, Integer> getCapturableCountMap() {
 		return capturableCountMap;
 	}
@@ -167,5 +169,23 @@ public class FactionStats {
 		}
 
 		return sortedMap;
+	}
+
+	public void printStats() {
+		Debug.print("---- Unit Stats ----");
+		Debug.print(" -- Army values --");
+		Debug.print("  Strength: " + getArmyStrength());
+		Debug.print("  Potential: " + getArmyPotential());
+		Debug.print("  Health: " + getArmyHealth());
+		Debug.print("  Unit count: " + getTotalUnitCount());
+		Debug.print(" -- Unit breakdown --");
+		for (String unitType : getUnitCountMap().keySet()) {
+			Debug.print(" " + unitType + ": " + getUnitCount(unitType));
+		}
+		Debug.print(" -- Base breakdown --");
+		Set<String> allBaseTypes = getCapturableCountMap().keySet();
+		for (String baseType : allBaseTypes) {
+			Debug.print(" " + baseType + ": " + getCapturableCount(baseType));
+		}
 	}
 }
