@@ -22,7 +22,7 @@ public class ElizaLocal {
 	 * Value 0 to 100 where 0 is never check against Eliza and 100 is always
 	 * check against Eliza
 	 */
-	public static final int checkAttackCoordsRatio = 100;
+	public static final int checkAttackCoordsRatio = 0;
 
 	private static CoordinateComparator comp = new CoordinateComparator();
 
@@ -65,14 +65,15 @@ public class ElizaLocal {
 	 * 
 	 * @param eliza
 	 * @param game
-	 * @param myFaction
+	 * @param playerName
 	 * @param unit
 	 * @param location
 	 * @return the attack coordinates of a unit from a particular coordinate
 	 */
 	public static List<Coordinate> getAttackCoords(Eliza eliza, Game game,
-			Faction myFaction, Unit unit, Coordinate location) {
+			String playerName, Unit unit, Coordinate location) {
 
+		Faction myFaction = game.getFactionByPlayerName(playerName);
 		String type = unit.getType();
 		List<Coordinate> elizaCoords = null;
 
@@ -201,14 +202,15 @@ public class ElizaLocal {
 	 * @param eliza
 	 * @param game
 	 * @param wmap
-	 * @param myFaction
+	 * @param playerName
 	 * @param unit
 	 * @param location
 	 * @return the movement coordinates of a unit from a particular coordinate
 	 */
 	public static List<Coordinate> getMovementCoords(Eliza eliza, Game game,
-			WeewarMap wmap, Faction myFaction, Unit unit, Coordinate location) {
+			WeewarMap wmap, String playerName, Unit unit, Coordinate location) {
 
+		Faction myFaction = game.getFactionByPlayerName(playerName);
 		String type = unit.getType();
 		List<Coordinate> elizaCoords = null;
 

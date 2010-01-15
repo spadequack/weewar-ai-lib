@@ -12,6 +12,7 @@ public class Coordinate implements Serializable {
 
 	private static final long serialVersionUID = -2381451713780555733L;
 
+	// immutable
 	private int x, y;
 
 	public enum Direction {
@@ -34,7 +35,7 @@ public class Coordinate implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return x * 1000 + y;
+		return x * 71 + y;
 	}
 
 	public Coordinate(int x, int y) {
@@ -53,14 +54,6 @@ public class Coordinate implements Serializable {
 
 	public int getY() {
 		return y;
-	}
-
-	public void setX(int i) {
-		x = i;
-	}
-
-	public void setY(int i) {
-		y = i;
 	}
 
 	public Direction getDirection(Coordinate c) {
@@ -151,9 +144,9 @@ public class Coordinate implements Serializable {
 			return c.x == x && c.y == y;
 		}
 	}
-	
+
 	public boolean equals(int x, int y) {
-		return this.x == x && this.y == y; 
+		return this.x == x && this.y == y;
 	}
 
 	/*
@@ -274,8 +267,23 @@ public class Coordinate implements Serializable {
 		return l;
 	}
 
-	public void setCoordinate(Coordinate copy) {
-		x = copy.getX();
-		y = copy.getY();
+	/**
+	 * Returns the number of coordinates (including nonexistent ones) around a
+	 * coordinate, including the coordinate. If maxDist is 0, this returns 1. If
+	 * maxDist is 1, this returns 6+1=7. If maxDist is 2, this returns 12+6+1=19
+	 * 
+	 * @param maxDist
+	 *            the maximum distance
+	 * @return the number of coordinates (including nonexistent ones) around a
+	 *         coordinate, including the coordinate
+	 */
+	public static int numCoordinatesWithin(int maxDist) {
+		return maxDist * (maxDist + 1) / 2 * 6 + 1;
 	}
+	
+	@Override
+	public Coordinate clone() {
+		return new Coordinate(this);
+	}
+
 }

@@ -1,9 +1,5 @@
 package weewarai.battlecalc;
 
-import java.io.IOException;
-
-import org.jdom.JDOMException;
-
 import weewarai.model.Coordinate;
 import weewarai.model.Game;
 import weewarai.model.Unit;
@@ -31,12 +27,9 @@ public class BattleCalcUtil {
 	 * @param bonus
 	 * @return the most probable damage done by unit moving to fromCoord and
 	 *         attacking the enemy unit on enemyCoord.
-	 * @throws IOException
-	 * @throws JDOMException
 	 */
 	public static double getMostProbableDamageDealt(Game game, WeewarMap wmap,
-			Unit unit, Coordinate fromCoord, Coordinate enemyCoord, int bonus)
-			throws IOException, JDOMException {
+			Unit unit, Coordinate fromCoord, Coordinate enemyCoord, int bonus) {
 		Unit enemy = game.getUnit(enemyCoord);
 
 		int dist = fromCoord.getDirectDistance(enemyCoord);
@@ -71,12 +64,10 @@ public class BattleCalcUtil {
 	 * @param bonus
 	 * @return the most probable damage received by unit moving to fromCoord and
 	 *         attacking the enemy unit on enemyCoord.
-	 * @throws IOException
-	 * @throws JDOMException
 	 */
 	public static double getMostProbableDamageReceived(Game game,
 			WeewarMap wmap, Unit unit, Coordinate fromCoord,
-			Coordinate enemyCoord, int bonus) throws IOException, JDOMException {
+			Coordinate enemyCoord, int bonus) {
 		Unit enemy = game.getUnit(enemyCoord);
 
 		int dist = fromCoord.getDirectDistance(enemyCoord);

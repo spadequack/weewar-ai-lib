@@ -48,6 +48,7 @@ public class HqGame {
 
 		// only the hq xml has the url that contains "join"
 		setRequiringAnInviteAccept(getUrl().contains("join"));
+		// TODO use players list to see if already accepted
 
 		parseCommonXmlElements(ele);
 		// from the hq xml...
@@ -62,6 +63,10 @@ public class HqGame {
 		setState(ele.getChildText("state"));
 
 		setUrl(ele.getChildText("url"));
+
+		String pendingInvites = ele.getChildText("pendingInvites");
+		setPendingInvites(pendingInvites != null
+				&& pendingInvites.equals("true"));
 
 	}
 
@@ -109,6 +114,21 @@ public class HqGame {
 			}
 			setDisabledUnitTypes(d);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return "Game name: "
+				+ getName()
+				+ " (game id: "
+				+ getId()
+				+ ", map id: "
+				+ getMapId()
+				+ ", "
+				+ (isRated() ? "rated" : "unrated")
+				+ ", "
+				+ (isBasic() || hasOnlyStandardUnits() ? "standard units only"
+						: "has pro units") + ")";
 	}
 
 	// ////////////////// Getters and Setters //////////////////////

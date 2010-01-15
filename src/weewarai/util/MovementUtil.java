@@ -49,20 +49,20 @@ public class MovementUtil {
 	 * @return the Coordinate in movementOptions closest to a Coordinate in
 	 *         targets
 	 */
-	public static Coordinate getClosestMovementToTarget(
+	public static Coordinate findClosestMovementToTarget(
 			List<Coordinate> movementOptions, Collection<Coordinate> targets) {
 		Coordinate best = null;
-		int n = Integer.MAX_VALUE;
+		int smallestDirectDist = Integer.MAX_VALUE;
 		for (Coordinate c : movementOptions) {
 			// initial case
 			if (best == null) {
 				best = c;
 			}
 			for (Coordinate target : targets) {
-				int d = c.getDirectDistance(target);
-				if (d < n) {
+				int dist = c.getDirectDistance(target);
+				if (dist < smallestDirectDist) {
 					best = c;
-					n = d;
+					smallestDirectDist = dist;
 				}
 			}
 		}
@@ -83,22 +83,19 @@ public class MovementUtil {
 	 *            the coordinates that this unit can move to
 	 * @param targets
 	 *            the targets that the unit wants to move to
-	 * @param bestMovement
-	 *            the coordinate object that will receive the coordinates of the
-	 *            best movement that will get the unit closest to the closest
-	 *            target
 	 * @param ignoreUnits
 	 *            whether to ignore units (i.e. don't consider ZoC)
 	 * @param selectAlg
 	 *            the move selection algorithm object that wraps a method used
 	 *            to select the best move - designed this way to allow using
 	 *            different selection algorithms at runtime
-	 * @return the shortest distance to the target, -1 if the best move is to
-	 *         stay
+	 * @return the best movement that will get the unit closest to the closest
+	 *         target and the shortest distance to the target, -1 if the best
+	 *         move is to stay
 	 */
-	public static int getBestMovementToTargets(Game game, WeewarMap wmap,
-			Unit unit, List<Coordinate> movementOptions,
-			Collection<Coordinate> targets, Coordinate bestMovement,
+	public static Pair<Coordinate, Integer> findBestMovementToTargets(
+			Game game, WeewarMap wmap, Unit unit,
+			List<Coordinate> movementOptions, Collection<Coordinate> targets,
 			boolean ignoreUnits, MoveSelectAlgorithm selectAlg) {
 
 		Debug.print("        Getting best movement to targets...");
@@ -122,12 +119,13 @@ public class MovementUtil {
 		}
 
 		if (bestMoves.isEmpty()) {
-			return -1; // best move is to stay
+			return new Pair<Coordinate, Integer>(null, -1); // best move is to
+			// stay
 		}
 
 		List<Coordinate> newBestMoves = selectAlg.select(wmap, unit, bestMoves);
-		bestMovement.setCoordinate(selectRandom(newBestMoves));
-		return closestDistToTarget;
+		return new Pair<Coordinate, Integer>(selectRandom(newBestMoves),
+				closestDistToTarget);
 	}
 
 	/**
@@ -143,4 +141,105 @@ public class MovementUtil {
 				+ " randomly from " + list);
 		return list.get(n - 1);
 	}
+
+	/**
+	 * Find the closest target, (that the unit can reach).
+	 * 
+	 * @param game
+	 *            the game state
+	 * @param wmap
+	 *            the map info
+	 * @param unit
+	 *            the moving unit
+	 * @param targets
+	 *            the targets
+	 * @return the closest target that this unit can move to
+	 */
+	public static Coordinate findClosest(Game game, WeewarMap wmap, Unit unit,
+			Collection<Coordinate> targets) {
+		Coordinate unitLocation = unit.getCoordinate();
+		Coordinate best = null;
+		int smallestDist = Integer.MAX_VALUE;
+
+		for (Coordinate target : targets) {
+			boolean ignoreUnits = false;
+			List<Coordinate> path = MovementPath.getShortestPathForUnit(wmap,
+					game, unit, unitLocation, target, ignoreUnits);
+			int dist = MovementPath.calculateMovementCost(path, wmap, unit);
+			if (dist != 0) {
+				if (dist < smallestDist) {
+					best = target;
+					smallestDist = dist;
+				}
+			}
+		}
+
+		return best;
+	}
+
+	/**
+	 * Find the closest target of the given unit type using direct distance.
+	 * 
+	 * @param game
+	 *            the game info
+	 * @param unitType
+	 *            the unit type being looked for, pass null for any type
+	 * @param unitLocation
+	 *            the coordinate of the unit
+	 * @param targets
+	 *            the coordinates of the targets
+	 * @return the coordinate of the closest unit
+	 */
+	public static Coordinate findClosestUnit(Game game, String unitType,
+			Coordinate unitLocation, Collection<Coordinate> targets) {
+		Coordinate best = null;
+		int smallestDirectDist = Integer.MAX_VALUE;
+
+		for (Coordinate target : targets) {
+			Unit unitAtLocation = game.getUnit(target);
+			if (unitAtLocation != null) {
+				if ((unitType == null)
+						|| (unitType.equals(unitAtLocation.getType()))) {
+					int distance = unitLocation.getDirectDistance(target);
+					if (distance < smallestDirectDist) {
+						best = target;
+						smallestDirectDist = distance;
+					}
+				}
+			}
+		}
+
+		return best;
+	}
+
+	/** Find the closest target. */
+	// public static Unit getClosestUnitForUnitType(Game game, WeewarMap wmap,
+	// Unit unit, Coordinate unitLocation, List<Unit> targets) {
+	// Unit best = null;
+	// int bestDistance = Integer.MAX_VALUE;
+	//
+	// boolean ignoreUnits = false;
+	// for (Unit target : targets) {
+	// if (target.getQuantity() != 0) {
+	// List<Coordinate> path = MovementPath.getShortestPathForUnit(wmap,
+	// game, unit, unitLocation, target.getCoordinate(), ignoreUnits);
+	// int dist = MovementPath.calculateMovementCost(path, wmap, unit);
+	//				
+	// List<Coordinate> path = ShortestPath.getShortestPathForUnit(
+	// wmap, game, unit, unitLocation, target
+	// .getCoordinate(), ignoreUnits, bestDistance);
+	//
+	// int distance = path.size();
+	// if (distance > 1) // it always has the destination node
+	// {
+	// if (distance < bestDistance) {
+	// best = target;
+	// bestDistance = distance;
+	// }
+	// }
+	// }
+	// }
+	//
+	// return best;
+	// }
 }

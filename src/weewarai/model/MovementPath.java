@@ -194,6 +194,7 @@ public class MovementPath {
 
 			int nextStepDistance = wmap.getDistanceForUnitType(u, v, unit);
 			int shortDist = getShortestDistance(u) + nextStepDistance;
+
 			// a bit redundant && check
 			if ((shortDist < UNPASSABLE) && (nextStepDistance < UNPASSABLE)) {
 				Unit unitOnWay = game.getUnit(v);
@@ -204,7 +205,7 @@ public class MovementPath {
 						}
 					}
 				}
-
+				
 				// subs can not pass enemy bases
 				if (unit.cannotEnterEnemyHarbor()) {
 					Faction terrainOwner = game.getTerrainOwner(u);
@@ -224,7 +225,7 @@ public class MovementPath {
 					}
 				}
 			}
-			
+
 			// if there is a real step possible
 			if (shortDist < UNPASSABLE) {
 				if (shortDist < getShortestDistance(v)) {

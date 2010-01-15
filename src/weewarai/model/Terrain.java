@@ -11,6 +11,7 @@ public class Terrain {
 	private String type;
 	private Coordinate coordinate;
 	private boolean finished;
+	private boolean isCapturable;
 
 	// TODO consider enum
 	public static final String Airfield = "Airfield";
@@ -33,7 +34,6 @@ public class Terrain {
 						Woods }));
 	}
 
-	private boolean isCapturable;
 	public static final List<String> capturableTerrains = new LinkedList<String>();
 
 	static {
@@ -170,6 +170,16 @@ public class Terrain {
 	 */
 	public void setCapturable(boolean isCapturable) {
 		this.isCapturable = isCapturable;
+	}
+
+	@Override
+	public Terrain clone() {
+		Terrain clone = new Terrain();
+		clone.coordinate = coordinate.clone();
+		clone.finished = finished;
+		clone.isCapturable = isCapturable;
+		clone.type = type;
+		return clone;
 	}
 
 }

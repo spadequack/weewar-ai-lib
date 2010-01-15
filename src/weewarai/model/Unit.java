@@ -28,10 +28,11 @@ public class Unit {
 	public static final String Light_Artillery = "Light Artillery";
 	public static final String Heavy_Artillery = "Heavy Artillery";
 	public static final String Capturing = "Capturing";
+	// TODO deal with different capturing unit types
 
 	public static final String Assault_Artillery = "Assault Artillery";
 	public static final String Berserker = "Berserker";
-	public static final String DFA = "D.F.A.";
+	public static final String DFA = "DFA";
 	public static final String Anti_Aircraft = "Anti Aircraft";
 
 	public static final String Hovercraft = "Hovercraft";
@@ -56,18 +57,24 @@ public class Unit {
 	public static List<String> basicUnits = new ArrayList<String>();
 
 	static {
-		basicUnits.addAll(Arrays.asList(new String[] { Trooper, Heavy_Trooper,
-				Raider, Tank, Heavy_Tank, Light_Artillery, Heavy_Artillery,
-				Capturing }));
+		basicUnits.addAll(Arrays.asList(new String[] { Trooper, Raider, Tank,
+				Light_Artillery, Capturing }));
 	}
 
 	public static List<String> proUnits = new ArrayList<String>();
 
 	static {
-		proUnits.addAll(Arrays.asList(new String[] { Assault_Artillery,
-				Berserker, DFA, Anti_Aircraft, Hovercraft, Speedboat,
-				Destroyer, Battleship, Submarine, Helicopter, Jetfighter,
-				Bomber }));
+		proUnits.addAll(Arrays.asList(new String[] { Heavy_Trooper, Heavy_Tank,
+				Heavy_Artillery, Assault_Artillery, Berserker, DFA,
+				Anti_Aircraft, Hovercraft, Speedboat, Destroyer, Battleship,
+				Submarine, Helicopter, Jetfighter, Bomber }));
+	}
+
+	public static List<String> capturingUnits = new ArrayList<String>();
+
+	static {
+		capturingUnits.addAll(Arrays.asList(new String[] { Trooper,
+				Heavy_Trooper, Hovercraft }));
 	}
 
 	public static List<String> allUnits = new ArrayList<String>();
@@ -131,6 +138,10 @@ public class Unit {
 				&& Specs.unitMinRange.get(getType()).get(unit.getUnitType()) == 1;
 	}
 
+	public boolean canCapture() {
+		return capturingUnits.contains(getType());
+	}
+
 	/**
 	 * Returns the unit type (soft, hard, etc.) of this unit
 	 * 
@@ -177,6 +188,17 @@ public class Unit {
 		// patches repair different amount
 		setQuantity(Math.min(getQuantity()
 				+ Specs.unitRepairAmount.get(getType()), Specs.MAX_QUANTITY));
+		return true;
+	}
+
+	public boolean canRepair() {
+		return getQuantity() > 0 && getQuantity() < Specs.MAX_QUANTITY;
+	}
+
+	public boolean receiveDamage(int damage) {
+		if (getQuantity() <= 0)
+			return false;
+		setQuantity(getQuantity() - damage);
 		return true;
 	}
 
@@ -292,5 +314,40 @@ public class Unit {
 	 */
 	public void incrementMoveCount() {
 		moveCount++;
+	}
+
+	@Override
+	public Unit clone() {
+		Unit clone = new Unit();
+		clone.type = type;
+		clone.finished = finished;
+		clone.moveCount = moveCount;
+		clone.coordinate = coordinate.clone();
+		clone.quantity = quantity;
+		clone.faction = faction; // no clone, else recursive inf-loop
+		clone.isBasic = isBasic;
+		return clone;
+	}
+
+	@Override
+	public int hashCode() {
+		return type.hashCode() + 5 * quantity + (finished ? 2 : 3)
+				+ (moveCount + 1) * 7 + 11 * coordinate.hashCode() + 17
+				* faction.getPlayerName().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o != null && o instanceof Unit) {
+			Unit u = (Unit) o;
+			return type.equals(u.type)
+					&& (quantity == u.quantity)
+					&& (finished == u.finished)
+					&& (moveCount == u.moveCount)
+					&& coordinate.equals(u.coordinate)
+					&& faction.getPlayerName()
+							.equals(u.faction.getPlayerName());
+		}
+		return false;
 	}
 }

@@ -31,11 +31,11 @@ public class Faction {
 		if (ele.getAttributeValue("credits") != null) {
 			setCredits(Integer.parseInt(ele.getAttributeValue("credits")));
 		}
-		
+
 		getStats().reset();
 		getUnits().clear();
 		getCapturedTerrains().clear();
-		
+
 		for (Element unitEle : (List<Element>) ele.getChildren("unit")) {
 			Unit u = new Unit();
 			u.parseXmlElement(unitEle);
@@ -51,8 +51,8 @@ public class Faction {
 				getCapturedTerrains().add(t);
 				getStats().addCapturable(t);
 			} else {
-				Debug.print("That's weird... " + t.getType()
-						+ " is owned by " + getPlayerName());
+				Debug.print("That's weird... " + t.getType() + " is owned by "
+						+ getPlayerName());
 				throw new RuntimeException("api error...?");
 			}
 		}
@@ -180,5 +180,61 @@ public class Faction {
 			}
 		}
 		return null;
+	}
+
+	public void reevaluateUnitStats() {
+		stats.reset();
+		for (Unit unit : units) {
+			stats.addUnit(unit);
+		}
+		for (Terrain terrain : capturedTerrains) {
+			stats.addCapturable(terrain);
+		}
+		stats.setIncomeFromCreditsPerBase();
+	}
+
+	@Override
+	public Faction clone() {
+		Faction clone = new Faction();
+		clone.state = state;
+		clone.playerName = playerName;
+		clone.credits = credits;
+		clone.units = new LinkedList<Unit>();
+		for (Unit u : units) {
+			Unit cu = u.clone();
+			cu.setFaction(clone);
+			clone.units.add(cu);
+		}
+		clone.capturedTerrains = new LinkedList<Terrain>();
+		for (Terrain t : capturedTerrains) {
+			Terrain ct = t.clone();
+			clone.capturedTerrains.add(ct);
+		}
+		clone.stats = stats.clone();
+		return clone;
+	}
+
+	@Override
+	public int hashCode() {
+		// hash uses only units and captured terrains
+		int hash = 0;
+		for (Unit u : units) {
+			hash += u.hashCode();
+		}
+		for (Terrain t : capturedTerrains) {
+			hash += t.hashCode();
+		}
+		hash += playerName.hashCode();
+		return hash;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o != null && o instanceof Faction) {
+			Faction f = (Faction) o;
+			return playerName.equals(f.playerName) && units.equals(f.units)
+					&& capturedTerrains.equals(f.capturedTerrains);
+		}
+		return false;
 	}
 }

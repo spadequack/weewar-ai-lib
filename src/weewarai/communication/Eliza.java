@@ -79,12 +79,12 @@ public class Eliza {
 	}
 
 	private String gameStateRequest(int gameId) throws IOException {
-		return httpRequest(apiUrlPrefix + "gameState.jsp?game=" + gameId,
+		return httpRequest(apiUrlPrefix + "gamestate/" + gameId,
 				username, token, "");
 	}
 
 	private String mapLayoutRequest(int mapId) throws IOException {
-		return httpRequest(apiUrlPrefix + "mapLayout.jsp?map=" + mapId,
+		return httpRequest(apiUrlPrefix + "map/" + mapId,
 				username, token, "");
 	}
 
@@ -153,7 +153,7 @@ public class Eliza {
 	 */
 	public Game getGameState(int id) throws IOException, JDOMException {
 		Document doc = getGameStateXML(id);
-		Game g = new Game();
+		Game g = new Game(username);
 		g.parseXmlElement(doc.getRootElement(), true);
 		return g;
 	}
@@ -280,7 +280,7 @@ public class Eliza {
 	@SuppressWarnings("unchecked")
 	public List<Coordinate> getAttackCoords(int id, Coordinate from, String type)
 			throws IOException, JDOMException {
-		Debug.print("eliza: getAttackCoords");
+//		Debug.print("eliza: getAttackCoords");
 		String requestXML = "<weewar game='" + id + "'><attackOptions x='"
 				+ from.getX() + "' y='" + from.getY() + "' type='" + type
 				+ "' /></weewar>";
@@ -301,7 +301,7 @@ public class Eliza {
 	@SuppressWarnings("unchecked")
 	public List<Coordinate> getMovementCoords(int id, Coordinate from,
 			String type) throws IOException, JDOMException {
-		Debug.print("eliza: getMovementCoords");
+//		Debug.print("eliza: getMovementCoords");
 		String requestXML = "<weewar game='" + id + "'><movementOptions x='"
 				+ from.getX() + "' y='" + from.getY() + "' type='" + type
 				+ "' /></weewar>";

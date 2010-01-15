@@ -19,7 +19,7 @@ public class SelectByHighestDef implements MoveSelectAlgorithm {
 			SortedMap<Integer, List<Coordinate>> possibleMoves) {
 		if (possibleMoves.isEmpty())
 			return null;
-		List<Coordinate> shortestDistMoves = possibleMoves.get(0);
+		List<Coordinate> shortestDistMoves = possibleMoves.get(possibleMoves.firstKey());
 
 		int highestTerrainDefMod = Integer.MIN_VALUE;
 		List<Coordinate> newBestMoves = new LinkedList<Coordinate>();

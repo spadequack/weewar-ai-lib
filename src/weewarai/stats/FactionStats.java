@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import weewarai.model.Coordinate;
-import weewarai.model.Faction;
 import weewarai.model.Specs;
 import weewarai.model.Terrain;
 import weewarai.model.Unit;
@@ -34,20 +32,12 @@ public class FactionStats {
 	private Map<String, Integer> capturableCountMap;
 
 	private int income = 0;
+	private int creditsPerBase;
 
 	public FactionStats() {
 		unitCountMap = new HashMap<String, Integer>();
 		capturableCountMap = new HashMap<String, Integer>();
 		reset();
-	}
-
-	public FactionStats(Faction faction, List<Coordinate> coords) {
-		for (Coordinate coord : coords) {
-			Unit unit = faction.getUnit(coord);
-			if (unit != null) {
-				addUnit(unit);
-			}
-		}
 	}
 
 	public void reset() {
@@ -57,6 +47,9 @@ public class FactionStats {
 		for (String s : Terrain.capturableTerrains) {
 			capturableCountMap.put(s, 0);
 		}
+		totalUnits = 0;
+		armyStrength = 0;
+		armyPotential = 0;
 	}
 
 	public void addUnit(Unit unit) {
@@ -106,6 +99,11 @@ public class FactionStats {
 	}
 
 	public void setIncomeFromCreditsPerBase(int creditsPerBase) {
+		this.creditsPerBase = creditsPerBase;
+		income = creditsPerBase * capturableCountMap.get("Base");
+	}
+	
+	public void setIncomeFromCreditsPerBase() {
 		income = creditsPerBase * capturableCountMap.get("Base");
 	}
 
@@ -121,6 +119,8 @@ public class FactionStats {
 	 * Takes the unit counts of your enemy and compares them to yours to see
 	 * where you are deficient. Subtracts the passed enemy unitCounts from yours
 	 * and then sorts the counts in ascending order
+	 * @param enemyStats 
+	 * @return 
 	 */
 	public LinkedHashMap<String, Integer> compareUnitCounts(
 			FactionStats enemyStats) {
@@ -187,5 +187,24 @@ public class FactionStats {
 		for (String baseType : allBaseTypes) {
 			Debug.print(" " + baseType + ": " + getCapturableCount(baseType));
 		}
+	}
+	
+	@Override
+	public FactionStats clone() {
+		FactionStats clone = new FactionStats();
+		clone.armyHealth = armyHealth;
+		clone.armyPotential = armyPotential;
+		clone.armyStrength = armyStrength;
+		clone.capturableCountMap = new HashMap<String, Integer>();
+		for (Map.Entry<String, Integer> e : capturableCountMap.entrySet()) {
+			capturableCountMap.put(e.getKey(), e.getValue());
+		}
+		clone.income = income;
+		clone.totalUnits = totalUnits;
+		clone.unitCountMap = new HashMap<String, Integer>();
+		for (Map.Entry<String, Integer> e : unitCountMap.entrySet()) {
+			unitCountMap.put(e.getKey(), e.getValue());
+		}
+		return clone;
 	}
 }

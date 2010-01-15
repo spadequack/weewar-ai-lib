@@ -71,4 +71,13 @@ public class BonusInfo {
 		// System.out.println("          .. bonus: " + bonus);
 		return bonus;
 	}
+	
+	@Override
+	public BonusInfo clone() {
+		BonusInfo clone = new BonusInfo(attackedCoordinate);
+		for (Coordinate c : attackFromLocations) {
+			clone.addAttackFromLocation(c.clone());
+		}
+		return clone;
+	}
 }

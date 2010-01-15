@@ -123,19 +123,56 @@ public class Util {
 		return null;
 	}
 
-	public static LinkedList<Terrain> getBuildableBases(Game game,
-			Faction myFaction) {
+	/**
+	 * Returns a list of all of the bot's empty and uncaptured capturable
+	 * terrains.
+	 * 
+	 * @param game
+	 *            the game object
+	 * @param myFaction
+	 *            the bot's faction
+	 * @return a list of all of the bot's empty and uncaptured capturable
+	 *         terrains.
+	 */
+	public static List<Terrain> getBuildableBases(Game game, Faction myFaction) {
 		LinkedList<Terrain> buildableBases = new LinkedList<Terrain>();
 		List<Terrain> terrains = myFaction.getCapturedTerrains();
 		for (Terrain terrain : terrains) {
 			boolean isBaseEmpty = (game.getUnit(terrain.getCoordinate()) == null);
 			boolean isBaseFinished = terrain.isFinished();
-	
+
 			if (isBaseEmpty && !isBaseFinished) {
 				buildableBases.add(terrain);
 			}
 		}
 		return buildableBases;
 	}
+
+	/**
+	 * Returns the number of own units that are at most maxDist away from the
+	 * given Coordinate
+	 * 
+	 * @param coordinate
+	 *            the coordinate
+	 * @param myUnits
+	 *            a list of own units
+	 * @param maxDist
+	 *            the maximum distance
+	 * @return the number of own units that are at most maxDist away from the
+	 *         given Coordinate
+	 */
+	public static int countNearOwnUnits(Coordinate coordinate,
+			List<Unit> myUnits, int maxDist) {
+		int count = 0;
+		for (Unit unit : myUnits) {
+			int distance = coordinate.getDirectDistance(unit.getCoordinate());
+			if (distance <= maxDist) {
+				count++;
+			}
+		}
+		return count;
+	}
 	
+	
+
 }

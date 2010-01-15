@@ -262,7 +262,7 @@ public class BattleCalc {
 		probabilities[0] = f(n, p, defSubunits * 6, 61);
 
 		for (int i = 0; i < 11; i++) { // rounded to one decimal place
-			probabilities[i] = Math.round(probabilities[i] * 1000) / 10.0;
+			probabilities[i] = Math.round(probabilities[i] * 10000) / 100.0;
 		}
 
 		return probabilities;
@@ -300,6 +300,11 @@ public class BattleCalc {
 						atkType), Specs.terrainDefense.get(defTerrain).get(
 						defType), bonus);
 		return probs;
+	}
+
+	public static void main(String args[]) {
+		printArray(getProbabilities(10, "Anti Aircraft", "Plains", 6, "Jetfighter",
+				"Plains", 1));
 	}
 
 	/**
